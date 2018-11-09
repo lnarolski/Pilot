@@ -5,10 +5,6 @@
              x:Class="Pilot.MainPage">
 
     <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <!--Place new controls here-->
-        <!--<Label Text="TEST" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />-->
         <Entry x:Name="KeyboardRead"/>
         <Button Text="Skróty" Pressed="Button_Shortcuts"
                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=.10}"
