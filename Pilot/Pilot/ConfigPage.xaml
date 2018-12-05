@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pilot.ConfigPage">
+    <ContentPage.Content>
+        <!--<StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Anuluj" Clicked="CancelButton_Clicked" />
+            <Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="OK" Clicked="OKButton_Clicked" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

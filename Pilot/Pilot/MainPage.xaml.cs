@@ -32,7 +32,8 @@ namespace Pilot
 
         private void Button_Config(object sender, EventArgs e)
         {
-
+            ConfigPage configPage = new ConfigPage();
+            Navigation.PushModalAsync(configPage);
         }
     }
 }
