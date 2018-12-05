@@ -26,5 +26,15 @@ namespace Pilot
         {
 
         }
+
+        private void ConnectButton_Clicked(object sender, EventArgs e)
+        {
+            ConnectionClass.Connect();
+        }
+
+        private void SearchButton_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }

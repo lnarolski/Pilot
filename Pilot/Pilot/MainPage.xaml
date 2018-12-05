@@ -4,26 +4,20 @@
              xmlns:local="clr-namespace:Pilot"
              x:Class="Pilot.MainPage">
 
-    <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
         <Entry x:Name="KeyboardRead"/>
-        <Button Text="Skróty" Pressed="Button_Shortcuts"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=.10}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=.20}"
-                RelativeLayout.XConstraint= "{ConstraintExpression Type=RelativeToParent, Property=Width, Factor = 0}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor = .90}"
-         />
-        <Button Text="Klawiatura" Pressed="Show_keyboard"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=.10}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=.60}"
-                RelativeLayout.XConstraint= "{ConstraintExpression Type=RelativeToParent, Property=Width, Factor = .20}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor = .90}"
-         />
-        <Button Text="⚙" Pressed="Button_Config" FontSize="35"
-                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=.10}"
-                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=.20}"
-                RelativeLayout.XConstraint= "{ConstraintExpression Type=RelativeToParent, Property=Width, Factor = .80}"
-                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor = .90}"
-         />
-    </RelativeLayout>
+        <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="1" Grid.Column="0" />
+        <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="1" Grid.Column="1" />
+        <Button Text="⚙" Pressed="Button_Config" FontSize="35" Grid.Row="1" Grid.Column="2" />
+    </Grid>
 
 </ContentPage>

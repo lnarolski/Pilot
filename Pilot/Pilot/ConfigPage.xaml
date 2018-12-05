@@ -10,13 +10,21 @@
         </StackLayout>-->
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+            <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <StackLayout>
+                    <Label Text="Adres IP komputera:" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
+                    <Entry x:Name="IP_address_entry" Margin="30,0,30,0"/>
+                    <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" Margin="30,0,30,0"/>
+                    <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked"  Margin="30,0,30,0"/>
+                </StackLayout>
+            </ScrollView>
             <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Anuluj" Clicked="CancelButton_Clicked" />
             <Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="OK" Clicked="OKButton_Clicked" />
         </Grid>

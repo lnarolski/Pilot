@@ -20,7 +20,8 @@ namespace Pilot
 
         private void Button_Shortcuts(object sender, EventArgs e)
         {
-
+            ShortcutsPage shortcutsPage = new ShortcutsPage();
+            Navigation.PushModalAsync(shortcutsPage);
         }
 
         private void Show_keyboard(object sender, EventArgs e)
