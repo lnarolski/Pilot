@@ -14,7 +14,7 @@
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Entry x:Name="KeyboardRead"/>
+        <Editor x:Name="KeyboardRead" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
         <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="1" Grid.Column="0" />
         <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="1" Grid.Column="1" />
         <Button Text="⚙" Pressed="Button_Config" FontSize="35" Grid.Row="1" Grid.Column="2" />
