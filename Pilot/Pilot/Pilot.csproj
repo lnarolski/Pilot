@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="TouchTracking" Version="1.0.0" />
+    <PackageReference Include="TouchTracking.Forms" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.3.0.912540" />
   </ItemGroup>
 

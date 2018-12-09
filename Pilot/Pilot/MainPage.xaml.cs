@@ -12,12 +12,37 @@ namespace Pilot
 {
     public partial class MainPage : ContentPage
     {
+        TouchTracking.TouchTrackingPoint StartPoint, EndPoint;
+        bool moveStart;
         public MainPage()
         {
             InitializeComponent();
             KeyboardRead.IsVisible = false;
 
             ConnectionClass.connected = false;
+            ConnectionClass.ipAddress = "10.0.2.2";
+            moveStart = true;
+
+            if (!ConnectionClass.connected)
+            {
+                if (ConnectionClass.Connect(ConnectionClass.ipAddress) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
+                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                else
+                {
+                    ConnectionClass.Disconnect();
+                }
+            }
+            else
+            {
+                if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
+                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                else
+                {
+                    ConnectionClass.connected = false;
+                }
+            }
+
+            
 
         }
 
@@ -44,39 +69,70 @@ namespace Pilot
         {
             if (KeyboardRead.Text.Length == 1)
                 return;
-            if (ConnectionClass.connected)
+            
+            Byte[] text;
+            ConnectionState sendStatus;
+            if (KeyboardRead.Text.Length == 0)
             {
-                try
-                {
-                    ConnectionClass.Connect(ConnectionClass.ipAddress);
-                    Byte[] data;
-                    Byte[] command;
-                    Byte[] text;
-                    if (KeyboardRead.Text.Length == 0)
-                    {
-                        data = BitConverter.GetBytes((int)Commands.SEND_BACKSPACE);
-                    }
-                    else
-                    {
-                        command = BitConverter.GetBytes((int)Commands.SEND_TEXT);
-                        text = System.Text.Encoding.UTF8.GetBytes(KeyboardRead.Text.Substring(1));
-                        data = new Byte[command.Length + text.Length];
-                        Buffer.BlockCopy(command, 0, data, 0, command.Length);
-                        Buffer.BlockCopy(text, 0, data, command.Length, text.Length);
-                    }
-                    ConnectionClass.stream.Write(data, 0, data.Length);
-                    ConnectionClass.Disconnect();
-                }
-                catch (Exception error)
-                {
-                    DisplayAlert("Błąd", error.ToString(), "OK");
-                }
+                sendStatus = ConnectionClass.Send(Commands.SEND_BACKSPACE);
             }
             else
             {
-                DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                text = System.Text.Encoding.UTF8.GetBytes(KeyboardRead.Text.Substring(1));
+                sendStatus = ConnectionClass.Send(Commands.SEND_TEXT, text);
+            }
+
+            switch (sendStatus)
+            {
+                case ConnectionState.CONNECTION_NOT_ESTABLISHED:
+                    DisplayAlert("Błąd", "Brak połączenia z komputerem", "OK");
+                    break;
+                case ConnectionState.SEND_NOT_SUCCESS:
+                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    break;
+                default:
+                    break;
             }
             KeyboardRead.Text = " ";
+        }
+
+        private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args)
+        {
+            switch (args.Type)
+            {
+                case TouchTracking.TouchActionType.Entered:
+                    break;
+                case TouchTracking.TouchActionType.Pressed:
+                    break;
+                case TouchTracking.TouchActionType.Moved:
+                    if (moveStart)
+                    {
+                        StartPoint = args.Location;
+                        moveStart = false;
+                    }
+                    else
+                    {
+                        moveStart = true;
+                        EndPoint = args.Location;
+                        double moveX = EndPoint.X - StartPoint.X;
+                        double moveY = EndPoint.Y - StartPoint.Y;
+                        Byte[] moveX_byte = BitConverter.GetBytes(moveX);
+                        Byte[] moveY_byte = BitConverter.GetBytes(moveY);
+                        Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
+                        Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
+                        Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
+                        ConnectionClass.Send(Commands.SEND_MOVE_MOUSE, data);
+                    }
+                    break;
+                case TouchTracking.TouchActionType.Released:
+                    break;
+                case TouchTracking.TouchActionType.Cancelled:
+                    break;
+                case TouchTracking.TouchActionType.Exited:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

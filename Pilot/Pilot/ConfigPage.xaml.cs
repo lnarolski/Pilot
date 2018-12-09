@@ -16,6 +16,8 @@ namespace Pilot
 		{
 			InitializeComponent();
 
+            IP_address_entry.Text = "10.0.2.2";
+
             if (ConnectionClass.connected)
             {
                 ConnectButton.Text = "Rozłącz";

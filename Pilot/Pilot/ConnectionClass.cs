@@ -11,6 +11,8 @@ namespace Pilot
         CONNECTION_NOT_ESTABLISHED,
         DISCONECT_SUCCESS,
         DISCONECT_NOT_SUCCESS,
+        SEND_SUCCESS,
+        SEND_NOT_SUCCESS,
     }
     static class ConnectionClass
     {
@@ -48,6 +50,42 @@ namespace Pilot
                 exceptionText = error.ToString();
                 connected = false;
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
+            }
+        }
+        public static ConnectionState Send(Commands commands, Byte[] data = null)
+        {
+            if (ConnectionClass.connected)
+            {
+                try
+                {
+                    ConnectionClass.Connect(ConnectionClass.ipAddress);
+                    Byte[] command;
+                    Byte[] dataToSend;
+                    command = BitConverter.GetBytes((int)commands);
+                    if (commands == Commands.SEND_BACKSPACE)
+                    {
+                        dataToSend = new Byte[command.Length];
+                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                    }
+                    else
+                    {
+                        dataToSend = new Byte[command.Length + data.Length];
+                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                        Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
+                    }
+                    ConnectionClass.stream.Write(dataToSend, 0, dataToSend.Length);
+                    ConnectionClass.Disconnect();
+                    return ConnectionState.SEND_SUCCESS;
+                }
+                catch (Exception error)
+                {
+                    exceptionText = error.ToString();
+                    return ConnectionState.SEND_NOT_SUCCESS;
+                }
+            }
+            else
+            {
+                return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
     };

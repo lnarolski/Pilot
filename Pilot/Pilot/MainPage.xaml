@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Pilot"
+             xmlns:tt="clr-namespace:TouchTracking.Forms;assembly=TouchTracking.Forms"
              x:Class="Pilot.MainPage">
 
     <Grid>
@@ -11,13 +12,20 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Editor x:Name="KeyboardRead" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
-        <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="1" Grid.Column="0" />
-        <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="1" Grid.Column="1" />
-        <Button Text="⚙" Pressed="Button_Config" FontSize="35" Grid.Row="1" Grid.Column="2" />
+        <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove">
+            <Grid.Effects>
+                <tt:TouchEffect Capture="True"
+                                TouchAction="TouchEffect_TouchAction" />
+            </Grid.Effects>
+        </Grid>
+        <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
+        <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
+        <Button Text="⚙" Pressed="Button_Config" FontSize="35" Grid.Row="2" Grid.Column="2" />
     </Grid>
 
 </ContentPage>

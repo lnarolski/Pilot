@@ -6,7 +6,10 @@ namespace Pilot
 {
     enum Commands
     {
-        SEND_TEXT,
+        SEND_TEXT = 1,
         SEND_BACKSPACE,
+        SEND_MOVE_MOUSE,
+        SEND_LEFT_MOUSE,
+        SEND_RIGHT_MOUSE,
     }
 }
