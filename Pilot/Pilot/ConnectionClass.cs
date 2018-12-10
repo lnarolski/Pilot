@@ -25,6 +25,8 @@ namespace Pilot
             try
             {
                 tcpClient = new TcpClient(ipAddress, 1234);
+                tcpClient.ReceiveTimeout = 100;
+                tcpClient.SendTimeout = 100;
                 ConnectionClass.ipAddress = ipAddress;
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
@@ -62,7 +64,7 @@ namespace Pilot
                     Byte[] command;
                     Byte[] dataToSend;
                     command = BitConverter.GetBytes((int)commands);
-                    if (commands == Commands.SEND_BACKSPACE)
+                    if (data == null)
                     {
                         dataToSend = new Byte[command.Length];
                         Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);

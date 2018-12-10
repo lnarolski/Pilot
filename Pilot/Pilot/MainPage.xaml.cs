@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -14,10 +15,14 @@ namespace Pilot
     {
         TouchTracking.TouchTrackingPoint StartPoint, EndPoint;
         bool moveStart;
+        bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited;
+        Stopwatch rightMouseTimer;
         public MainPage()
         {
             InitializeComponent();
             KeyboardRead.IsVisible = false;
+
+            rightMouseTimer = new Stopwatch();
 
             ConnectionClass.connected = false;
             ConnectionClass.ipAddress = "10.0.2.2";
@@ -103,8 +108,14 @@ namespace Pilot
                 case TouchTracking.TouchActionType.Entered:
                     break;
                 case TouchTracking.TouchActionType.Pressed:
+                    moveStart = true;
+                    touchPressed = true;
+                    touchMoved = false;
+                    touchReleased = false;
+                    rightMouseTimer.Start();
                     break;
                 case TouchTracking.TouchActionType.Moved:
+                    touchMoved = true;
                     if (moveStart)
                     {
                         StartPoint = args.Location;
@@ -116,19 +127,37 @@ namespace Pilot
                         EndPoint = args.Location;
                         double moveX = EndPoint.X - StartPoint.X;
                         double moveY = EndPoint.Y - StartPoint.Y;
-                        Byte[] moveX_byte = BitConverter.GetBytes(moveX);
-                        Byte[] moveY_byte = BitConverter.GetBytes(moveY);
-                        Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
-                        Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
-                        Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
-                        ConnectionClass.Send(Commands.SEND_MOVE_MOUSE, data);
+                        if (moveX == 0.0 && moveY == 0.0)
+                        {
+                            touchMoved = false;
+                        }
+                        else
+                        {
+                            Byte[] moveX_byte = BitConverter.GetBytes(moveX);
+                            Byte[] moveY_byte = BitConverter.GetBytes(moveY);
+                            Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
+                            Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
+                            Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
+                            ConnectionClass.Send(Commands.SEND_MOVE_MOUSE, data);
+                        }
                     }
                     break;
                 case TouchTracking.TouchActionType.Released:
+                    moveStart = true;
+                    touchReleased = true;
+                    rightMouseTimer.Stop();
+                    if (touchPressed && !touchMoved)
+                        if (rightMouseTimer.ElapsedMilliseconds > 1000)
+                            ConnectionClass.Send(Commands.SEND_RIGHT_MOUSE);
+                        else
+                            ConnectionClass.Send(Commands.SEND_LEFT_MOUSE);
+                    rightMouseTimer.Reset();
                     break;
                 case TouchTracking.TouchActionType.Cancelled:
+                    moveStart = true;
                     break;
                 case TouchTracking.TouchActionType.Exited:
+                    moveStart = true;
                     break;
                 default:
                     break;

@@ -16,7 +16,7 @@ namespace Pilot
 		{
 			InitializeComponent();
 
-            IP_address_entry.Text = "10.0.2.2";
+            IP_address_entry.Text = "192.168.1.34";
 
             if (ConnectionClass.connected)
             {
