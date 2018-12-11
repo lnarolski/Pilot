@@ -25,7 +25,7 @@ namespace Pilot
             rightMouseTimer = new Stopwatch();
 
             ConnectionClass.connected = false;
-            ConnectionClass.ipAddress = "10.0.2.2";
+            ConnectionClass.ipAddress = "a1";
             moveStart = true;
 
             if (!ConnectionClass.connected)
@@ -108,14 +108,12 @@ namespace Pilot
                 case TouchTracking.TouchActionType.Entered:
                     break;
                 case TouchTracking.TouchActionType.Pressed:
-                    moveStart = true;
                     touchPressed = true;
                     touchMoved = false;
                     touchReleased = false;
                     rightMouseTimer.Start();
                     break;
                 case TouchTracking.TouchActionType.Moved:
-                    touchMoved = true;
                     if (moveStart)
                     {
                         StartPoint = args.Location;
@@ -123,6 +121,7 @@ namespace Pilot
                     }
                     else
                     {
+                        touchMoved = true;
                         moveStart = true;
                         EndPoint = args.Location;
                         double moveX = EndPoint.X - StartPoint.X;

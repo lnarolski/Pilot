@@ -7,16 +7,16 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Editor x:Name="KeyboardRead" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+        <Editor x:Name="KeyboardRead" Keyboard="Plain" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove">
             <Grid.Effects>
                 <tt:TouchEffect Capture="True"
@@ -25,7 +25,7 @@
         </Grid>
         <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
         <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
-        <Button Text="⚙" Pressed="Button_Config" FontSize="35" Grid.Row="2" Grid.Column="2" />
+        <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" />
     </Grid>
 
 </ContentPage>

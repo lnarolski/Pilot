@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="TouchTracking" Version="1.0.0" />
     <PackageReference Include="TouchTracking.Forms" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.3.0.912540" />
