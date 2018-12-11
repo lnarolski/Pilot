@@ -25,7 +25,7 @@
                     <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked"  Margin="30,0,30,0"/>
                 </StackLayout>
             </ScrollView>
-            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Anuluj" Clicked="CancelButton_Clicked" />
+            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Wstecz" Clicked="CancelButton_Clicked" />
             <!--<Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="OK" Clicked="OKButton_Clicked" />-->
         </Grid>
     </ContentPage.Content>

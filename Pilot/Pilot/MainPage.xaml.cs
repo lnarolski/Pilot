@@ -13,6 +13,7 @@ namespace Pilot
 {
     public partial class MainPage : ContentPage
     {
+        Editor KeyboardRead;
         TouchTracking.TouchTrackingPoint StartPoint, EndPoint;
         bool moveStart;
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited;
@@ -20,6 +21,20 @@ namespace Pilot
         public MainPage()
         {
             InitializeComponent();
+
+            KeyboardRead = new Editor
+            {
+                Text = " ",
+                //Keyboard = Keyboard.Plain
+            };
+
+            KeyboardRead.Keyboard = Keyboard.Create(KeyboardFlags.None);
+            KeyboardRead.TextChanged += KeyboardRead_TextChanged;
+            KeyboardRead.IsVisible = false;
+
+            gridPage.Children.Add(KeyboardRead, 0, 0);
+            Grid.SetColumnSpan(KeyboardRead, 3);
+
             KeyboardRead.IsVisible = false;
 
             rightMouseTimer = new Stopwatch();
@@ -146,7 +161,7 @@ namespace Pilot
                     touchReleased = true;
                     rightMouseTimer.Stop();
                     if (touchPressed && !touchMoved)
-                        if (rightMouseTimer.ElapsedMilliseconds > 1000)
+                        if (rightMouseTimer.ElapsedMilliseconds > 500)
                             ConnectionClass.Send(Commands.SEND_RIGHT_MOUSE);
                         else
                             ConnectionClass.Send(Commands.SEND_LEFT_MOUSE);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SQLite;
 
 namespace Pilot
 {
@@ -15,8 +16,6 @@ namespace Pilot
 		public ConfigPage ()
 		{
 			InitializeComponent();
-
-            IP_address_entry.Text = "192.168.1.34";
 
             if (ConnectionClass.connected)
             {
