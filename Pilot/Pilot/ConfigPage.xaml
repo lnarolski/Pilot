@@ -20,7 +20,7 @@
             <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                 <StackLayout>
                     <Label Text="Adres IP komputera:" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
-                    <Entry x:Name="IP_address_entry" Margin="30,0,30,0" Text="127.0.0.1"/>
+                    <Entry x:Name="IP_address_entry" Margin="30,0,30,0" Text=""/>
                     <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" Margin="30,0,30,0"/>
                     <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked"  Margin="30,0,30,0"/>
                 </StackLayout>

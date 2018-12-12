@@ -26,7 +26,7 @@ namespace Pilot
                 ConnectButton.Text = "Połącz";
             }
 
-            if (ConnectionClass.connected)
+            //if (ConnectionClass.connected)
                 IP_address_entry.Text = ConnectionClass.ipAddress;
 		}
 

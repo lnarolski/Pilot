@@ -161,7 +161,7 @@ namespace Pilot
                     touchReleased = true;
                     rightMouseTimer.Stop();
                     if (touchPressed && !touchMoved)
-                        if (rightMouseTimer.ElapsedMilliseconds > 500)
+                        if (rightMouseTimer.ElapsedMilliseconds > 800)
                             ConnectionClass.Send(Commands.SEND_RIGHT_MOUSE);
                         else
                             ConnectionClass.Send(Commands.SEND_LEFT_MOUSE);
