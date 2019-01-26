@@ -13,11 +13,11 @@ namespace Pilot
 {
     public partial class MainPage : ContentPage
     {
-        Editor KeyboardRead;
-        TouchTracking.TouchTrackingPoint StartPoint, EndPoint;
-        bool moveStart;
-        bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited;
-        Stopwatch rightMouseTimer;
+        Editor KeyboardRead; //pole wykorzystywane do wprowadzania tekstu
+        TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
+        bool moveStart; //rozpoczęcie ruchu palcem
+        bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
+        Stopwatch rightMouseTimer; //timer wykorzystywany do określenia lewego lub prawego przycisku myszy
         public MainPage()
         {
             InitializeComponent();
@@ -66,37 +66,37 @@ namespace Pilot
 
         }
 
-        private void Button_Shortcuts(object sender, EventArgs e)
+        private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami
         {
             ShortcutsPage shortcutsPage = new ShortcutsPage();
             Navigation.PushModalAsync(shortcutsPage);
         }
 
-        private void Show_keyboard(object sender, EventArgs e)
+        private void Show_keyboard(object sender, EventArgs e) //wyświetlenie klawiatury ekranowej
         {
             KeyboardRead.Unfocus();
             Thread.Sleep(500);
             KeyboardRead.Focus();
         }
 
-        private void Button_Config(object sender, EventArgs e)
+        private void Button_Config(object sender, EventArgs e) //okno konfiguracji aplikacji
         {
             ConfigPage configPage = new ConfigPage();
             Navigation.PushModalAsync(configPage);
         }
 
-        private void KeyboardRead_TextChanged(object sender, TextChangedEventArgs e)
+        private void KeyboardRead_TextChanged(object sender, TextChangedEventArgs e) //zdarzenie generowane podczas wprowadzania tekstu
         {
-            if (KeyboardRead.Text.Length == 1)
+            if (KeyboardRead.Text.Length == 1) //unikanie dublowania wywoływania zdarzenia
                 return;
             
-            Byte[] text;
+            Byte[] text; //odczytany tekst
             ConnectionState sendStatus;
-            if (KeyboardRead.Text.Length == 0)
+            if (KeyboardRead.Text.Length == 0) //w przypadku usunięcia znaku wysłanie klawisza BACKSPACE
             {
                 sendStatus = ConnectionClass.Send(Commands.SEND_BACKSPACE);
             }
-            else
+            else //wysłanie tekstu
             {
                 text = System.Text.Encoding.UTF8.GetBytes(KeyboardRead.Text.Substring(1));
                 sendStatus = ConnectionClass.Send(Commands.SEND_TEXT, text);
@@ -113,12 +113,12 @@ namespace Pilot
                 default:
                     break;
             }
-            KeyboardRead.Text = " ";
+            KeyboardRead.Text = " "; //przywrócenie tekstu początkowego
         }
 
-        private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args)
+        private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args) //zdarzenie związane z dotykaniem "szarego" obszaru
         {
-            switch (args.Type)
+            switch (args.Type) //działania związane z rodzajem zdarzenia
             {
                 case TouchTracking.TouchActionType.Entered:
                     break;

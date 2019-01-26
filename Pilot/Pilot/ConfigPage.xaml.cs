@@ -35,12 +35,7 @@ namespace Pilot
             Navigation.PopModalAsync();
         }
 
-        private void OKButton_Clicked(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ConnectButton_Clicked(object sender, EventArgs e)
+        private void ConnectButton_Clicked(object sender, EventArgs e) //próba połączenia z serwerem
         {
             if (!ConnectionClass.connected)
             {
@@ -64,7 +59,7 @@ namespace Pilot
             }
         }
 
-        private void SearchButton_Clicked(object sender, EventArgs e)
+        private void SearchButton_Clicked(object sender, EventArgs e) //TODO: Automatyczne wykrywanie serwera w sieci lokalnej
         {
 
         }

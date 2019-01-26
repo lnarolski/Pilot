@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Pilot
 {
-    enum ConnectionState
+    enum ConnectionState //statusy związane z komunikacją
     {
         CONNECTION_ESTABLISHED,
         CONNECTION_NOT_ESTABLISHED,
@@ -14,14 +14,14 @@ namespace Pilot
         SEND_SUCCESS,
         SEND_NOT_SUCCESS,
     }
-    static class ConnectionClass
+    static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
     {
         public static TcpClient tcpClient;
         public static bool connected;
         public static string exceptionText;
         public static string ipAddress;
         public static NetworkStream stream;
-        public static ConnectionState Connect(string ipAddress) {
+        public static ConnectionState Connect(string ipAddress) { //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
             try
             {
                 tcpClient = new TcpClient(ipAddress, 1234);
@@ -41,7 +41,7 @@ namespace Pilot
                 return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
-        public static ConnectionState Disconnect()
+        public static ConnectionState Disconnect() //zakończenie połączenia
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             }
         }
-        public static ConnectionState Send(Commands commands, Byte[] data = null)
+        public static ConnectionState Send(Commands commands, Byte[] data = null) //wysyłanie polecenia
         {
             if (ConnectionClass.connected)
             {
