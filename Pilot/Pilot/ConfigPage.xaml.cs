@@ -13,7 +13,8 @@ namespace Pilot
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ConfigPage : ContentPage
 	{
-		public ConfigPage ()
+        public string SelectedIPAddress;
+        public ConfigPage ()
 		{
 			InitializeComponent();
 
@@ -59,9 +60,22 @@ namespace Pilot
             }
         }
 
-        private void SearchButton_Clicked(object sender, EventArgs e) //TODO: Automatyczne wykrywanie serwera w sieci lokalnej
+        private void SearchButton_Clicked(object sender, EventArgs e)
         {
+            SearchPage searchPage = new SearchPage();
+            searchPage.SelectedIPAddress += value => SelectedIPAddress = value;
+            searchPage.Disappearing += SearchPage_Disappearing;
+            Navigation.PushModalAsync(searchPage);
+        }
 
+        private void SearchPage_Disappearing(object sender, EventArgs e)
+        {
+            if (SelectedIPAddress != null)
+            {
+                ConnectButton_Clicked(null, null);
+                IP_address_entry.Text = SelectedIPAddress;
+                SelectedIPAddress = null;
+            }
         }
     }
 }

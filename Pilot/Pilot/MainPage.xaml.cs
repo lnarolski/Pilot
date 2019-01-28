@@ -61,9 +61,6 @@ namespace Pilot
                     ConnectionClass.connected = false;
                 }
             }
-
-            
-
         }
 
         private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami
