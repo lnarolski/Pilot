@@ -15,6 +15,13 @@ namespace Pilot
 		public ShortcutsPage ()
 		{
 			InitializeComponent ();
+
+            ShortcutsButtonsGrid.Children.Add(new Button()
+            {
+                Text = "Dodaj nowy skrót",
+                Image = "Pilot.img.plus.png",
+                ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 20),
+            });
 		}
 
         private void BackButton_Clicked(object sender, EventArgs e)

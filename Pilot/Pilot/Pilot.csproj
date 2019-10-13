@@ -10,6 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="img\plus.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="img\plus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="TouchTracking" Version="1.0.0" />
     <PackageReference Include="TouchTracking.Forms" Version="1.0.0" />
