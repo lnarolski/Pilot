@@ -45,26 +45,31 @@
             </StackLayout>
             <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <Label Text="Skróty" HorizontalTextAlignment="Center" />
-                <ScrollView>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="8*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid x:Name="ShortcutsButtonsGrid" Grid.Row="0" Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                            </Grid.ColumnDefinitions>
-                        </Grid>
-                    </Grid>
-                </ScrollView>
+                <Grid VerticalOptions="Start">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <ScrollView Grid.Column="1" Grid.Row="0">
+                        <ListView ItemsSource="" ItemSelected="ShortcutsListView_ItemSelected" IsVisible="True" x:Name="ShortcutsListView">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" HeightRequest="50">
+                                            <Image Source="{Binding Image}" />
+                                            <Label Text="{Binding Text}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollView>
+                </Grid>
+                
             </StackLayout>
             <Button Grid.Column="0" Grid.Row="2" x:Name="BackButton" Text="Wstecz" Clicked="BackButton_Clicked" />
         </Grid>
