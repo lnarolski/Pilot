@@ -26,9 +26,8 @@ namespace Pilot
             {
                 ConnectButton.Text = "Połącz";
             }
-
-            //if (ConnectionClass.connected)
-                IP_address_entry.Text = ConnectionClass.ipAddress;
+            
+            IP_address_entry.Text = DatabaseClass.GetLastIPAddress();
 		}
 
         private void CancelButton_Clicked(object sender, EventArgs e)

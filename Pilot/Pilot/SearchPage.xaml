@@ -16,7 +16,7 @@
                 <Label Text="Lista serwerów:" HorizontalTextAlignment="Center" Margin="50" FontSize="Medium"/>
                 <Label Text="" x:Name="Text" IsVisible="True" HorizontalTextAlignment="Center" Margin="50"/>
                 <ScrollView>
-                    <ListView ItemsSource="" ItemSelected="OnSelection" IsVisible="False" x:Name="IPAddressesListView" Margin="50">
+                    <ListView x:ItemsSource="" ItemSelected="OnSelection" IsVisible="False" x:Name="IPAddressesListView" Margin="50">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>

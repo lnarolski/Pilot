@@ -34,12 +34,12 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Button Text="▐◄◄" Grid.Row="0" Grid.Column="0" FontSize="Large" />
-                        <Button Text="►/‖" Grid.Row="0" Grid.Column="1" FontSize="Large" />
-                        <Button Text="►►▌" Grid.Row="0" Grid.Column="2" FontSize="Large" />
-                        <Button Text="VOL-" Grid.Row="1" Grid.Column="0" FontSize="Large" />
-                        <Button Text="■" Grid.Row="1" Grid.Column="1" FontSize="Large" />
-                        <Button Text="VOL+" Grid.Row="1" Grid.Column="2" FontSize="Large" />
+                        <Button Text="▐◄◄" Grid.Row="0" Grid.Column="0" FontSize="Large" x:Name="PreviousButton" Clicked="PreviousButton_Clicked"/>
+                        <Button Text="►/‖" Grid.Row="0" Grid.Column="1" FontSize="Large" x:Name="PlayStopButton" Clicked="PlayStopButton_Clicked" />
+                        <Button Text="►►▌" Grid.Row="0" Grid.Column="2" FontSize="Large" x:Name="NextButton" Clicked="NextButton_Clicked" />
+                        <Button Text="VOL-" Grid.Row="1" Grid.Column="0" FontSize="Large" x:Name="VolDownButton" Clicked="VolDownButton_Clicked" />
+                        <Button Text="■" Grid.Row="1" Grid.Column="1" FontSize="Large" x:Name="StopButton" Clicked="StopButton_Clicked" />
+                        <Button Text="VOL+" Grid.Row="1" Grid.Column="2" FontSize="Large" x:Name="VolUpButton" Clicked="VolUpButton_Clicked" />
                     </Grid>
                 </Grid>
             </StackLayout>
@@ -55,7 +55,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <ScrollView Grid.Column="1" Grid.Row="0">
-                        <ListView ItemsSource="" ItemSelected="ShortcutsListView_ItemSelected" IsVisible="True" x:Name="ShortcutsListView">
+                        <ListView x:ItemsSource="" ItemSelected="ShortcutsListView_ItemSelected" IsVisible="True" x:Name="ShortcutsListView">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <ViewCell>

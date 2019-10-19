@@ -40,27 +40,30 @@ namespace Pilot
             rightMouseTimer = new Stopwatch();
 
             ConnectionClass.connected = false;
-            ConnectionClass.ipAddress = "a1";
+            ConnectionClass.ipAddress = DatabaseClass.GetLastIPAddress();
             moveStart = true;
 
-            //if (!ConnectionClass.connected)
-            //{
-            //    if (ConnectionClass.Connect(ConnectionClass.ipAddress) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
-            //        DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-            //    else
-            //    {
-            //        ConnectionClass.Disconnect();
-            //    }
-            //}
-            //else
-            //{
-            //    if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
-            //        DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-            //    else
-            //    {
-            //        ConnectionClass.connected = false;
-            //    }
-            //}
+            if (!ConnectionClass.connected)
+            {
+                if (ConnectionClass.ipAddress != "")
+                {
+                    if (ConnectionClass.Connect(ConnectionClass.ipAddress) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
+                        DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    else
+                    {
+                        ConnectionClass.Disconnect();
+                    }
+                }
+            }
+            else
+            {
+                if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
+                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                else
+                {
+                    ConnectionClass.connected = false;
+                }
+            }
         }
 
         private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami

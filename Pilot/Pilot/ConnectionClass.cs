@@ -27,11 +27,12 @@ namespace Pilot
                 tcpClient = new TcpClient(ipAddress, 1234);
                 tcpClient.ReceiveTimeout = 500;
                 tcpClient.SendTimeout = 500;
-                ConnectionClass.ipAddress = ipAddress;
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
                 stream.ReadTimeout = 500;
                 stream.WriteTimeout = 500;
+                ConnectionClass.ipAddress = ipAddress;
+                DatabaseClass.UpdateLastIPAddress(ConnectionClass.ipAddress);
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
             catch (Exception error)
