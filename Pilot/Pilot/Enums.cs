@@ -16,6 +16,7 @@ namespace Pilot
         SEND_NEXT,
         SEND_VOLDOWN,
         SEND_STOP,
-        SEND_VOLUP
+        SEND_VOLUP,
+        SEND_OPEN_WEBPAGE,
     }
 }

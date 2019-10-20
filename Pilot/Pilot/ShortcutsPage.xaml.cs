@@ -12,9 +12,11 @@ namespace Pilot
 {
     public struct ShortcutCell
     {
+        public int Id { get; set; }
         public string Image { get; set; }
         public string Text { get; set; }
         public string WWWAddress { get; set; }
+        public bool ButtonVisible { get; set; }
     }
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ShortcutsPage : ContentPage
@@ -41,6 +43,7 @@ namespace Pilot
                 Image = "plus.png",
                 Text = "Dodaj nowy skrót",
                 WWWAddress = "",
+                ButtonVisible = false,
             });
 
             ShortcutsListView.ItemsSource = null;
@@ -65,11 +68,6 @@ namespace Pilot
         private void BackButton_Clicked(object sender, EventArgs e)
         {
             Navigation.PopModalAsync();
-        }
-
-        private void ShortcutsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-
         }
 
         private void PreviousButton_Clicked(object sender, EventArgs e)
@@ -106,6 +104,41 @@ namespace Pilot
         {
             if ((state = ConnectionClass.Send(Commands.SEND_VOLUP)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
+        }
+
+        private void ShortcutsListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (((ShortcutCell) e.Item).Text == "Dodaj nowy skrót")
+            {
+                ShortcutFormPage shortcutFormPage = new ShortcutFormPage();
+                shortcutFormPage.Disappearing += ShortcutFormPage_Disappearing;
+                Navigation.PushModalAsync(shortcutFormPage);
+            }
+            else
+            {
+                byte[] WWWAddressByte = Encoding.ASCII.GetBytes(((ShortcutCell)e.Item).WWWAddress);
+                ConnectionClass.Send(Commands.SEND_OPEN_WEBPAGE, WWWAddressByte);
+            }
+        }
+
+        private void ShortcutFormPage_Disappearing(object sender, EventArgs e)
+        {
+            RefreshShortcutsList();
+        }
+
+        private void EditButton_Clicked(object sender, EventArgs e)
+        {
+            Button ClickedButton = (Button) sender;
+            StackLayout listViewItem = (StackLayout) ClickedButton.Parent;
+            Label label = (Label) listViewItem.Children[0];
+            int Id = int.Parse(label.Text);
+
+            if (Id > 0)
+            {
+                ShortcutFormPage shortcutFormPage = new ShortcutFormPage(Id);
+                shortcutFormPage.Disappearing += ShortcutFormPage_Disappearing;
+                Navigation.PushModalAsync(shortcutFormPage);
+            }
         }
     }
 }

@@ -100,33 +100,51 @@ namespace Pilot
 
         public static void UpdateLastIPAddress(string LastIpAddress)
         {
-            OpenDB();
-            if (DatabaseState == DatabaseState.DATABASE_OPENED)
+            try
             {
-                db.Execute("UPDATE ConfigTable SET LastIpAddress = ? WHERE Id = 1", LastIpAddress);
-                db.Close();
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    db.Execute("UPDATE ConfigTable SET LastIpAddress = ? WHERE Id = 1", LastIpAddress);
+                    db.Close();
 
-                DatabaseState = DatabaseState.DATABASE_OK;
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                }
             }
-            else
+            catch (Exception ex)
             {
+                exceptionText = ex.ToString();
                 DatabaseState = DatabaseState.DATABASE_ERROR;
+                return;
             }
         }
 
         public static string GetLastIPAddress()
         {
-            OpenDB();
-            if (DatabaseState == DatabaseState.DATABASE_OPENED)
+            try
             {
-                var existingItem = db.Get<ConfigTable>(1);
-                db.Close();
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    var existingItem = db.Get<ConfigTable>(1);
+                    db.Close();
 
-                DatabaseState = DatabaseState.DATABASE_OK;
-                return existingItem.LastIpAddress;
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                    return existingItem.LastIpAddress;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                    return "";
+                }
             }
-            else
+            catch (Exception ex)
             {
+                exceptionText = ex.ToString();
                 DatabaseState = DatabaseState.DATABASE_ERROR;
                 return "";
             }
@@ -147,9 +165,11 @@ namespace Pilot
                     {
                         observableCollection.Add(new ShortcutCell()
                         {
+                            Id = item.Id,
                             Image = item.Image,
                             Text = item.Text,
                             WWWAddress = item.WWWAddress,
+                            ButtonVisible = true,
                         });
                     }
                 }
@@ -162,6 +182,133 @@ namespace Pilot
             {
                 DatabaseState = DatabaseState.DATABASE_ERROR;
                 return;
+            }
+        }
+
+        public static ShortcutCell GetShortcutFromDatabase(int id)
+        {
+            if (id < 1)
+            {
+                return new ShortcutCell();
+            }
+
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    var existingItem = db.Get<ShortcutsTable>(id);
+                    db.Close();
+
+                    ShortcutCell shortcutCell = new ShortcutCell()
+                    {
+                        Id = existingItem.Id,
+                        Text = existingItem.Text,
+                        WWWAddress = existingItem.WWWAddress,
+                        Image = existingItem.Image,
+                        ButtonVisible = true,
+                    };
+
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                    return shortcutCell;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                    return new ShortcutCell();
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
+                return new ShortcutCell();
+            }
+        }
+
+        public static void AddNewShortcut(ShortcutCell shortcutCell)
+        {
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    var Shortcut = new ShortcutsTable()
+                    {
+                        Image = shortcutCell.Image,
+                        Text = shortcutCell.Text,
+                        WWWAddress = shortcutCell.WWWAddress,
+                    };
+
+                    if (db.Insert(Shortcut) != 1)
+                    {
+                        DatabaseState = DatabaseState.DATABASE_ERROR;
+                        db.Close();
+                        return;
+                    }
+                    db.Close();
+
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                    return;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
+            }
+        }
+
+        public static void EditShortcut(ShortcutCell shortcutCell)
+        {
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    db.Execute("UPDATE ShortcutsTable SET Text = ?, WWWAddress = ?, Image = ? WHERE Id = ?", shortcutCell.Text, shortcutCell.WWWAddress, shortcutCell.Image, shortcutCell.Id);
+                    db.Close();
+
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
+            }
+        }
+
+        public static void DeleteShortcut(ShortcutCell shortcutCell)
+        {
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    db.Execute("DELETE FROM ShortcutsTable WHERE Id = ?", shortcutCell.Id);
+                    db.Close();
+
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
             }
         }
     }

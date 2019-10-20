@@ -55,13 +55,15 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <ScrollView Grid.Column="1" Grid.Row="0">
-                        <ListView x:ItemsSource="" ItemSelected="ShortcutsListView_ItemSelected" IsVisible="True" x:Name="ShortcutsListView">
+                        <ListView x:ItemsSource="" ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <ViewCell>
                                         <StackLayout Orientation="Horizontal" HeightRequest="50">
-                                            <Image Source="{Binding Image}" />
+                                            <Label Text="{Binding Id}" IsVisible="False" />
+                                            <Image Source="{Binding Image}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="20" WidthRequest="20" />
                                             <Label Text="{Binding Text}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                                            <Button Text="Edytuj" x:Name="EditButton" Clicked="EditButton_Clicked" IsVisible="{Binding ButtonVisible}" />
                                         </StackLayout>
                                     </ViewCell>
                                 </DataTemplate>
@@ -69,7 +71,6 @@
                         </ListView>
                     </ScrollView>
                 </Grid>
-                
             </StackLayout>
             <Button Grid.Column="0" Grid.Row="2" x:Name="BackButton" Text="Wstecz" Clicked="BackButton_Clicked" />
         </Grid>
