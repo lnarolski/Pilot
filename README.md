@@ -6,6 +6,5 @@ Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z 
 
 # TODO
 - Dodanie obsługi poleceń otwarcia konkretnych stron WWW wraz z pobieraniem favicon'ów ze stron internetowych (i zapisywaniem ich do bazy danych)
-- Dodanie możliwości sterowania aplikacjami multimedialnymi
 - Zapisywanie skrótów i innych danych dodanych przez użytkownika do bazy danych SQLite
 - Dodanie obługi szyfrowania wysyłanych pakietów, aby nie było możliwe otwarcie niebezpiecznej strony internetowej przez osoby trzecie
