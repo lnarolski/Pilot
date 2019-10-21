@@ -28,7 +28,9 @@ namespace Pilot
             }
             
             IP_address_entry.Text = DatabaseClass.GetLastIPAddress();
-		}
+            Port_entry.Text = DatabaseClass.GetLastPort();
+            Password_entry.Text = DatabaseClass.GetLastPassword();
+        }
 
         private void CancelButton_Clicked(object sender, EventArgs e)
         {
@@ -39,7 +41,7 @@ namespace Pilot
         {
             if (!ConnectionClass.connected)
             {
-                if (ConnectionClass.Connect(IP_address_entry.Text) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
+                if (ConnectionClass.Connect(IP_address_entry.Text, Port_entry.Text, Password_entry.Text) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
                     DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
                 else
                 {

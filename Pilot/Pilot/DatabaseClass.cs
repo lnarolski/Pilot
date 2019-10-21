@@ -31,19 +31,21 @@ namespace Pilot
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string LastIpAddress { get; set; }
+        public string LastPort { get; set; }
+        public string LastPassword { get; set; }
     }
     static class DatabaseClass
     {
         public static DatabaseState DatabaseState;
         private static SQLiteConnection db;
         public static string exceptionText { get; private set; }
-        public static void OpenDB()
+        public static void OpenDB() //Otwieranie bazy danych
         {
             try
             {
                 string path;
 
-                if (DeviceInfo.Platform == DevicePlatform.UWP)
+                if (DeviceInfo.Platform == DevicePlatform.UWP) //Wybór ścieżki dla pliku bazy danych zależnei od platformy
                 {
                     path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }
@@ -52,7 +54,7 @@ namespace Pilot
                     path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                 }
 
-                if (!File.Exists(Path.Combine(path, "db.db3")))
+                if (!File.Exists(Path.Combine(path, "db.db3"))) //Utworzenie lub otwarcie pliku bazy danych
                 {
                     db = new SQLiteConnection(Path.Combine(path, "db.db3"));
                     db.CreateTable<ShortcutsTable>();
@@ -60,6 +62,8 @@ namespace Pilot
 
                     var ConfigTable = new ConfigTable();
                     ConfigTable.LastIpAddress = "";
+                    ConfigTable.LastPort = "1234";
+                    ConfigTable.LastPassword = "";
                     db.Insert(ConfigTable);
                 }
                 else
@@ -78,7 +82,7 @@ namespace Pilot
             }
         }
 
-        public static void CloseDB()
+        public static void CloseDB() //Zamykanie bazy danych
         {
             if (db != null)
             {
@@ -98,14 +102,14 @@ namespace Pilot
             DatabaseState = DatabaseState.DATABASE_NULL;
         }
 
-        public static void UpdateLastIPAddress(string LastIpAddress)
+        public static void UpdateConfig(string LastIpAddress, string LastPort, string LastPassword) //Aktualizacja konfiguracji
         {
             try
             {
                 OpenDB();
                 if (DatabaseState == DatabaseState.DATABASE_OPENED)
                 {
-                    db.Execute("UPDATE ConfigTable SET LastIpAddress = ? WHERE Id = 1", LastIpAddress);
+                    db.Execute("UPDATE ConfigTable SET LastIpAddress = ?, LastPort = ?, LastPassword = ? WHERE Id = 1", LastIpAddress, LastPort, LastPassword);
                     db.Close();
 
                     DatabaseState = DatabaseState.DATABASE_OK;
@@ -123,7 +127,7 @@ namespace Pilot
             }
         }
 
-        public static string GetLastIPAddress()
+        public static string GetLastIPAddress() //Odczyt ostatniego adresu IP, z którym doszło do pomyślnego utworzenia połączenia
         {
             try
             {
@@ -149,8 +153,61 @@ namespace Pilot
                 return "";
             }
         }
+        public static string GetLastPort() //Odczyt ostatniego numeru portu, z którym doszło do pomyślnego utworzenia połączenia
+        {
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    var existingItem = db.Get<ConfigTable>(1);
+                    db.Close();
 
-        public static void CreateShortcutsList(ObservableCollection<ShortcutCell> observableCollection)
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                    return existingItem.LastPort;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
+                return "";
+            }
+        }
+
+        public static string GetLastPassword() //Odczyt ostatniego hasła, z którym doszło do pomyślnego utworzenia połączenia
+        {
+            try
+            {
+                OpenDB();
+                if (DatabaseState == DatabaseState.DATABASE_OPENED)
+                {
+                    var existingItem = db.Get<ConfigTable>(1);
+                    db.Close();
+
+                    DatabaseState = DatabaseState.DATABASE_OK;
+                    return existingItem.LastPassword;
+                }
+                else
+                {
+                    DatabaseState = DatabaseState.DATABASE_ERROR;
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionText = ex.ToString();
+                DatabaseState = DatabaseState.DATABASE_ERROR;
+                return "";
+            }
+        }
+
+        public static void CreateShortcutsList(ObservableCollection<ShortcutCell> observableCollection) //Odczyt tabeli skrótów z bazy danych i utworzenie listy dla kontrolki ListView
         {
             OpenDB();
             if (DatabaseState == DatabaseState.DATABASE_OPENED)
@@ -185,7 +242,7 @@ namespace Pilot
             }
         }
 
-        public static ShortcutCell GetShortcutFromDatabase(int id)
+        public static ShortcutCell GetShortcutFromDatabase(int id) //Odczyt rekordu ze skrótem o zadanym numerze Id
         {
             if (id < 1)
             {
@@ -226,7 +283,7 @@ namespace Pilot
             }
         }
 
-        public static void AddNewShortcut(ShortcutCell shortcutCell)
+        public static void AddNewShortcut(ShortcutCell shortcutCell) //Dodanie nowego skrótu do bazy danych
         {
             try
             {
@@ -264,7 +321,7 @@ namespace Pilot
             }
         }
 
-        public static void EditShortcut(ShortcutCell shortcutCell)
+        public static void EditShortcut(ShortcutCell shortcutCell) //Modyfikacja skrótu znaajdującego się bazie danych
         {
             try
             {
@@ -288,7 +345,7 @@ namespace Pilot
             }
         }
 
-        public static void DeleteShortcut(ShortcutCell shortcutCell)
+        public static void DeleteShortcut(ShortcutCell shortcutCell) //Usunięcie skrótu z bazy danych
         {
             try
             {

@@ -21,10 +21,12 @@ namespace Pilot
         public static string exceptionText;
         public static string ipAddress;
         public static NetworkStream stream;
-        public static ConnectionState Connect(string ipAddress) { //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
+        public static short port;
+        public static string password = "";
+        public static ConnectionState Connect(string ipAddress, string port, string password) { //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
             try
             {
-                tcpClient = new TcpClient(ipAddress, 1234);
+                tcpClient = new TcpClient(ipAddress, int.Parse(port));
                 tcpClient.ReceiveTimeout = 500;
                 tcpClient.SendTimeout = 500;
                 connected = true;
@@ -32,7 +34,9 @@ namespace Pilot
                 stream.ReadTimeout = 500;
                 stream.WriteTimeout = 500;
                 ConnectionClass.ipAddress = ipAddress;
-                DatabaseClass.UpdateLastIPAddress(ConnectionClass.ipAddress);
+                ConnectionClass.port = short.Parse(port);
+                ConnectionClass.password = password;
+                DatabaseClass.UpdateConfig(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
             catch (Exception error)
@@ -63,7 +67,7 @@ namespace Pilot
             {
                 try
                 {
-                    ConnectionClass.Connect(ConnectionClass.ipAddress);
+                    ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
                     Byte[] command;
                     Byte[] dataToSend;
                     command = BitConverter.GetBytes((int)commands);

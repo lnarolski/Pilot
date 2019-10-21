@@ -41,13 +41,15 @@ namespace Pilot
 
             ConnectionClass.connected = false;
             ConnectionClass.ipAddress = DatabaseClass.GetLastIPAddress();
+            ConnectionClass.port = short.Parse(DatabaseClass.GetLastPort());
+            ConnectionClass.password = DatabaseClass.GetLastPassword();
             moveStart = true;
 
             if (!ConnectionClass.connected)
             {
                 if (ConnectionClass.ipAddress != "")
                 {
-                    if (ConnectionClass.Connect(ConnectionClass.ipAddress) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
+                    if (ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
                         DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
                     else
                     {
