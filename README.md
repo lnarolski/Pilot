@@ -6,3 +6,4 @@ Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z 
 
 # TODO
 - Dodanie obługi szyfrowania wysyłanych pakietów, aby nie było możliwe otwarcie niebezpiecznej strony internetowej przez osoby trzecie
+- Poprawki wizualne (np. dodanie grafik do przycisków, zmiana domyślnych grafik Xamarina)

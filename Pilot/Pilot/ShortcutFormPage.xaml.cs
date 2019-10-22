@@ -19,7 +19,7 @@ namespace Pilot
 			InitializeComponent ();
 
             Id = id;
-            if (Id != -1)
+            if (Id != -1) //Gdy formularz ma być wykorzystany do edycji skrótu
             {
                 ShortcutCell = DatabaseClass.GetShortcutFromDatabase(Id);
 
@@ -65,7 +65,7 @@ namespace Pilot
 
             ShortcutCell.Text = TextEntry.Text;
             ShortcutCell.WWWAddress = WWWAddressEntry.Text;
-            ShortcutCell.Image = "https://www.google.com/s2/favicons?domain=" + ShortcutCell.WWWAddress;
+            ShortcutCell.Image = "https://www.google.com/s2/favicons?domain=" + ShortcutCell.WWWAddress; //Pobranie adresu favicon'a z wykorzystaniem Google'a
 
             if (Id != -1)
             {

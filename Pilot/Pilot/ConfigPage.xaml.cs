@@ -14,6 +14,7 @@ namespace Pilot
 	public partial class ConfigPage : ContentPage
 	{
         public string SelectedIPAddress;
+        public short SelectedPort;
         public ConfigPage ()
 		{
 			InitializeComponent();
@@ -41,6 +42,19 @@ namespace Pilot
         {
             if (!ConnectionClass.connected)
             {
+                try
+                {
+                    if (short.Parse(Port_entry.Text) < 1)
+                    {
+                        DisplayAlert("Błąd", "Nieprawidłowy numer portu", "OK");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    DisplayAlert("Błąd numeru portu", ex.ToString(), "OK");
+                    return;
+                }
                 if (ConnectionClass.Connect(IP_address_entry.Text, Port_entry.Text, Password_entry.Text) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
                     DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
                 else
@@ -65,6 +79,7 @@ namespace Pilot
         {
             SearchPage searchPage = new SearchPage();
             searchPage.SelectedIPAddress += value => SelectedIPAddress = value;
+            searchPage.SelectedPort += value => SelectedPort = value;
             searchPage.Disappearing += SearchPage_Disappearing;
             Navigation.PushModalAsync(searchPage);
         }
@@ -73,8 +88,9 @@ namespace Pilot
         {
             if (SelectedIPAddress != null)
             {
-                ConnectButton_Clicked(null, null);
                 IP_address_entry.Text = SelectedIPAddress;
+                Port_entry.Text = SelectedPort.ToString();
+                ConnectButton_Clicked(null, null);
                 SelectedIPAddress = null;
             }
         }

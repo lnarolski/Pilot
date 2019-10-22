@@ -20,7 +20,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding .}" />
+                                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding IPAddress}" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>

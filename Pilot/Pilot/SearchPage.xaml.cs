@@ -11,12 +11,19 @@ using Zeroconf;
 
 namespace Pilot
 {
+    public struct FoundServer
+    {
+        public string IPAddress { get; set; }
+        public short port { get; set; }
+    }
+
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class SearchPage : ContentPage
 	{
         public event Action<string> SelectedIPAddress; //Wybrany przez użytkownika adres IP przekazywany do okna rodzica
+        public event Action<short> SelectedPort; //Wybrany przez użytkownika port adresu IP przekazywany do okna rodzica
         Task task; //Zadanie wyszukiwania uług w sieci
-        public static ObservableCollection<string> IPAdresses { get; set; }
+        public static ObservableCollection<FoundServer> IPAdresses { get; set; }
         public SearchPage ()
 		{
 			InitializeComponent ();
@@ -36,10 +43,13 @@ namespace Pilot
 
             IReadOnlyList<IZeroconfHost> results = await
                 ZeroconfResolver.ResolveAsync("_pilotServer._tcp.local."); //Wyszukiwanie usług o nazwie "_pilotServer._tcp.local." z wykorzystaniem zeroconf
-            IPAdresses = new ObservableCollection<string>();
+            IPAdresses = new ObservableCollection<FoundServer>();
             foreach (var item in results)
             {
-                IPAdresses.Add(item.IPAddress); //Dodawanie znalezionych adresów IP do listy
+                IPAdresses.Add(new FoundServer() {
+                    IPAddress = item.IPAddress,
+                    port = (short) item.Services["_pilotServer._tcp.local."].Port,
+                }); //Dodawanie znalezionych adresów IP do listy
             }
             if (IPAdresses.Count == 0)
             {
@@ -48,9 +58,9 @@ namespace Pilot
             else
             {
                 Text.IsVisible = false; //Ukrycie komunikatu o wyszukiwaniu serwerów
+                IPAddressesListView.IsVisible = true; //Wyświetlenie listy
                 IPAddressesListView.ItemsSource = null;
                 IPAddressesListView.ItemsSource = IPAdresses; //Podpięcie nowej listy adresów IP z uruchomioną usługą serwera aplikacji Pilot do kontrolki ListView
-                IPAddressesListView.IsVisible = true; //Wyświetlenie wygenerowanej listy
             }
 
             CancelButton.IsEnabled = true; //Aktywacja przycisku Wstecz
@@ -75,7 +85,8 @@ namespace Pilot
                 return;
             }
             OKButton.IsEnabled = true; //Aktywacja przycisku OK
-            SelectedIPAddress(e.SelectedItem.ToString()); //Przekazanie wybranego przez użytkownika adresu IP do okna rodzica
+            SelectedIPAddress(((FoundServer) (e.SelectedItem)).IPAddress.ToString()); //Przekazanie wybranego przez użytkownika adresu IP do okna rodzica
+            SelectedPort(((FoundServer) (e.SelectedItem)).port); //Przekazanie wybranego przez użytkownika portu adresu IP do okna rodzica
         }
     }
 }

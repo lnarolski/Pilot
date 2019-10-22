@@ -32,7 +32,7 @@ namespace Pilot
             RefreshShortcutsList();
 		}
 
-        private void RefreshShortcutsList()
+        private void RefreshShortcutsList() //Metoda odświeżająca listę skrótów
         {
             Shortcuts.Clear();
 
@@ -108,13 +108,13 @@ namespace Pilot
 
         private void ShortcutsListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (((ShortcutCell) e.Item).Text == "Dodaj nowy skrót")
+            if (((ShortcutCell) e.Item).Text == "Dodaj nowy skrót") //Otwarcie formularza dodawania skrótu, gdy treść klikniętej komórki to "Dodaj nowy skrót"
             {
                 ShortcutFormPage shortcutFormPage = new ShortcutFormPage();
                 shortcutFormPage.Disappearing += ShortcutFormPage_Disappearing;
                 Navigation.PushModalAsync(shortcutFormPage);
             }
-            else
+            else //Wysyłanie polecenia związanego z klikniętą komórką w innym wypadku
             {
                 byte[] WWWAddressByte = Encoding.ASCII.GetBytes(((ShortcutCell)e.Item).WWWAddress);
                 ConnectionClass.Send(Commands.SEND_OPEN_WEBPAGE, WWWAddressByte);
@@ -126,7 +126,7 @@ namespace Pilot
             RefreshShortcutsList();
         }
 
-        private void EditButton_Clicked(object sender, EventArgs e)
+        private void EditButton_Clicked(object sender, EventArgs e) //Otwarcie formularza w trybie edycji komórki powiązanej z numerem Id
         {
             Button ClickedButton = (Button) sender;
             StackLayout listViewItem = (StackLayout) ClickedButton.Parent;
