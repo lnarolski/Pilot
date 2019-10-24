@@ -12,18 +12,28 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <ScrollView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                <StackLayout>
-                    <Label Text="Adres IP komputera:" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
-                    <Entry x:Name="IP_address_entry" Margin="30,0,30,0" Text=""/>
-                    <Label Text="Port:" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
-                    <Entry x:Name="Port_entry" Margin="30,0,30,0" Text=""/>
-                    <Label Text="Hasło:" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="True"/>
-                    <Entry x:Name="Password_entry" Margin="30,0,30,0" Text="" IsVisible="True" IsPassword="True"/>
-                    <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" Margin="30,0,30,0"/>
-                    <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked"  Margin="30,0,30,0"/>
-                </StackLayout>
-            </ScrollView>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <ScrollView Grid.Row="0" Grid.Column="1">
+                    <StackLayout>
+                        <Label Text="Adres IP komputera:" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
+                        <Entry x:Name="IP_address_entry" Text=""/>
+                        <Label Text="Port:" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
+                        <Entry x:Name="Port_entry" Text=""/>
+                        <Label Text="Hasło:" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="True"/>
+                        <Entry x:Name="Password_entry" Text="" IsVisible="True" IsPassword="True"/>
+                        <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" />
+                        <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked" />
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
             <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Wstecz" Clicked="CancelButton_Clicked" />
         </Grid>
     </ContentPage.Content>
