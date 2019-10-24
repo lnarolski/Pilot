@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Pilot
@@ -61,6 +63,17 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             }
         }
+        private static byte[] GenerateSalt(int size, string password)
+        {
+            var buffer = new byte[size];
+            var passBytes = ASCIIEncoding.ASCII.GetBytes(password);
+
+            if (passBytes.Length > buffer.Length) Array.Copy(passBytes, buffer, buffer.Length);
+            else Array.Copy(passBytes, buffer, passBytes.Length);
+
+            return buffer;
+        }
+
         public static ConnectionState Send(Commands commands, Byte[] data = null) //wysyłanie polecenia
         {
             if (ConnectionClass.connected)
@@ -70,19 +83,83 @@ namespace Pilot
                     ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
                     Byte[] command;
                     Byte[] dataToSend;
+                    Byte[] dataToSendEncoded;
                     command = BitConverter.GetBytes((int)commands);
+
+                    AesCryptoServiceProvider _aes;
+                    _aes = new AesCryptoServiceProvider();
+                    _aes.KeySize = 256;
+                    _aes.BlockSize = 128;
+
                     if (data == null)
                     {
                         dataToSend = new Byte[command.Length];
                         Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+
+                        try
+                        {
+                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            {
+                                using (var stream = new MemoryStream())
+                                {
+                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
+                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+
+                                    var proc = _aes.CreateEncryptor();
+                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
+                                    {
+                                        crypto.Write(dataToSend, 0, dataToSend.Length);
+                                        crypto.Clear();
+                                        crypto.Close();
+                                    }
+                                    stream.Close();
+
+                                    dataToSendEncoded = stream.ToArray();
+                                }
+                            }
+                        }
+                        catch (Exception error)
+                        {
+                            exceptionText = error.ToString();
+                            return ConnectionState.SEND_NOT_SUCCESS;
+                        }
                     }
                     else
                     {
                         dataToSend = new Byte[command.Length + data.Length];
                         Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
                         Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
+
+                        try
+                        {
+                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            {
+                                using (var stream = new MemoryStream())
+                                {
+                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
+                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+
+                                    var proc = _aes.CreateEncryptor();
+                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
+                                    {
+                                        crypto.Write(dataToSend, 0, dataToSend.Length);
+                                        crypto.Clear();
+                                        crypto.Close();
+                                    }
+                                    stream.Close();
+
+                                    dataToSendEncoded = stream.ToArray();
+                                }
+                            }
+                        }
+                        catch (Exception error)
+                        {
+                            exceptionText = error.ToString();
+                            return ConnectionState.SEND_NOT_SUCCESS;
+                        }
                     }
-                    ConnectionClass.stream.Write(dataToSend, 0, dataToSend.Length);
+
+                    ConnectionClass.stream.Write(dataToSendEncoded, 0, dataToSendEncoded.Length);
                     ConnectionClass.Disconnect();
                     return ConnectionState.SEND_SUCCESS;
                 }

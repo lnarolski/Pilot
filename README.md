@@ -5,5 +5,4 @@ Mobilna aplikacja do zdalnego sterowania komputerem poprzez sieć komputerową d
 Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z zainstalowanym systemem Windows. Aplikacja umożliwia obsługę aplikacji multimedialnych uruchomionych na komputerze (np. Spotify, VLC) oraz otwieranie zapamiętanych adresów stron WWW.
 
 # TODO
-- Dodanie obługi szyfrowania wysyłanych pakietów, aby nie było możliwe otwarcie niebezpiecznej strony internetowej przez osoby trzecie
-- Poprawki wizualne (np. dodanie grafik do przycisków, zmiana domyślnych grafik Xamarina)
+- Poprawki wizualne (np. dodanie grafik do przycisków, zmiana domyślnych grafik Xamarina, ustawienie takich samych marginesów na wszystkich stronach interfejsu)

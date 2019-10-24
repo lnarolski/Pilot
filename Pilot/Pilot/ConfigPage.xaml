@@ -18,8 +18,8 @@
                     <Entry x:Name="IP_address_entry" Margin="30,0,30,0" Text=""/>
                     <Label Text="Port:" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
                     <Entry x:Name="Port_entry" Margin="30,0,30,0" Text=""/>
-                    <Label Text="Hasło:" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="False"/>
-                    <Entry x:Name="Password_entry" Margin="30,0,30,0" Text="" IsVisible="False" IsPassword="True"/>
+                    <Label Text="Hasło:" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="True"/>
+                    <Entry x:Name="Password_entry" Margin="30,0,30,0" Text="" IsVisible="True" IsPassword="True"/>
                     <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" Margin="30,0,30,0"/>
                     <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked"  Margin="30,0,30,0"/>
                 </StackLayout>
