@@ -34,12 +34,12 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Button Text="▐◄◄" Grid.Row="0" Grid.Column="0" FontSize="Large" x:Name="PreviousButton" Clicked="PreviousButton_Clicked"/>
-                        <Button Text="►/‖" Grid.Row="0" Grid.Column="1" FontSize="Large" x:Name="PlayStopButton" Clicked="PlayStopButton_Clicked" />
-                        <Button Text="►►▌" Grid.Row="0" Grid.Column="2" FontSize="Large" x:Name="NextButton" Clicked="NextButton_Clicked" />
-                        <Button Text="VOL-" Grid.Row="1" Grid.Column="0" FontSize="Large" x:Name="VolDownButton" Clicked="VolDownButton_Clicked" />
-                        <Button Text="■" Grid.Row="1" Grid.Column="1" FontSize="Large" x:Name="StopButton" Clicked="StopButton_Clicked" />
-                        <Button Text="VOL+" Grid.Row="1" Grid.Column="2" FontSize="Large" x:Name="VolUpButton" Clicked="VolUpButton_Clicked" />
+                        <ImageButton Source="ic_skip_previous.png" Aspect="AspectFit" Grid.Row="0" Grid.Column="0" x:Name="PreviousButton" Clicked="PreviousButton_Clicked"/>
+                        <ImageButton Source="ic_play_circle_outline.png" Aspect="AspectFit" Grid.Row="0" Grid.Column="1" x:Name="PlayStopButton" Clicked="PlayStopButton_Clicked" />
+                        <ImageButton Source="ic_skip_next.png" Aspect="AspectFit" Grid.Row="0" Grid.Column="2" x:Name="NextButton" Clicked="NextButton_Clicked" />
+                        <ImageButton Source="ic_volume_down.png" Aspect="AspectFit"  Grid.Row="1" Grid.Column="0"  x:Name="VolDownButton" Clicked="VolDownButton_Clicked" />
+                        <ImageButton Source="ic_stop.png" Aspect="AspectFit" Grid.Row="1" Grid.Column="1" x:Name="StopButton" Clicked="StopButton_Clicked" />
+                        <ImageButton Source="ic_volume_up.png" Aspect="AspectFit" Grid.Row="1" Grid.Column="2"  x:Name="VolUpButton" Clicked="VolUpButton_Clicked" />
                     </Grid>
                 </Grid>
             </StackLayout>
@@ -54,22 +54,20 @@
                         <ColumnDefinition Width="8*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ScrollView Grid.Column="1" Grid.Row="0">
-                        <ListView x:ItemsSource="" ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <ViewCell>
-                                        <StackLayout Orientation="Horizontal" HeightRequest="50">
-                                            <Label Text="{Binding Id}" IsVisible="False" />
-                                            <Image Source="{Binding Image}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="20" WidthRequest="20" />
-                                            <Label Text="{Binding Text}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
-                                            <Button Text="Edytuj" x:Name="EditButton" Clicked="EditButton_Clicked" IsVisible="{Binding ButtonVisible}" />
-                                        </StackLayout>
-                                    </ViewCell>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollView>
+                    <ListView x:ItemsSource="" ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView" Grid.Column="1" Grid.Row="0">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" HeightRequest="50">
+                                        <Label Text="{Binding Id}" IsVisible="False" />
+                                        <Image Source="{Binding Image}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="20" WidthRequest="20" />
+                                        <Label Text="{Binding Text}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+                                        <Button Text="Edytuj" x:Name="EditButton" Clicked="EditButton_Clicked" IsVisible="{Binding ButtonVisible}" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
             </StackLayout>
             <Button Grid.Column="0" Grid.Row="2" x:Name="BackButton" Text="Wstecz" Clicked="BackButton_Clicked" />

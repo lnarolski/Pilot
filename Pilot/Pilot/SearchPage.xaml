@@ -15,17 +15,15 @@
             <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                 <Label Text="Lista serwerów:" HorizontalTextAlignment="Center" Margin="50" FontSize="Medium"/>
                 <Label Text="" x:Name="Text" IsVisible="True" HorizontalTextAlignment="Center" Margin="50"/>
-                <ScrollView>
-                    <ListView x:ItemsSource="" ItemSelected="OnSelection" IsVisible="False" x:Name="IPAddressesListView" Margin="50">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding IPAddress}" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollView>
+                <ListView x:ItemsSource="" ItemSelected="OnSelection" IsVisible="False" x:Name="IPAddressesListView" Margin="50">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding IPAddress}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackLayout>
             <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Wstecz" Clicked="CancelButton_Clicked" />
             <Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="OK" Clicked="OKButton_Clicked" />
