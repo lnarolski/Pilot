@@ -62,7 +62,7 @@ namespace Pilot
 
                     var ConfigTable = new ConfigTable();
                     ConfigTable.LastIpAddress = "";
-                    ConfigTable.LastPort = "1234";
+                    ConfigTable.LastPort = "22222";
                     ConfigTable.LastPassword = "";
                     db.Insert(ConfigTable);
                 }
