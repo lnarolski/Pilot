@@ -15,3 +15,6 @@ Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z 
 - Wyświetlanie klawiatury ekranowej nie działa w aplikacji UWP, ponieważ Xamarin nie udostępnia API do obsługi klawiatury ekranowej
 
 # [Zrzuty ekranu](https://github.com/lnarolski/Pilot/tree/master/Screenshots)
+
+# TODO
+- Dodanie obsługi połączenia przez protokół UDP
