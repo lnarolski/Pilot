@@ -18,3 +18,4 @@ Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z 
 
 # TODO
 - Dodanie obsługi połączenia przez protokół UDP
+- Dodanie zabezpieczenia przed powielaniem pakietów z poleceniami
