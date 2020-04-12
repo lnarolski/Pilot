@@ -90,7 +90,7 @@ namespace Pilot
             {
                 IP_address_entry.Text = SelectedIPAddress;
                 Port_entry.Text = SelectedPort.ToString();
-                ConnectButton_Clicked(null, null);
+                //ConnectButton_Clicked(null, null);
                 SelectedIPAddress = null;
             }
         }

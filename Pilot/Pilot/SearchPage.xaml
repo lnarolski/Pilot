@@ -28,7 +28,10 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding IPAddress}" />
+                                    <StackLayout Orientation="Vertical">
+                                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontAttributes="Bold"  FontSize="Default" Text="{Binding name}" />
+                                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="Small" Text="{Binding IPAddress}" />
+                                    </StackLayout>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
