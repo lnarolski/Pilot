@@ -16,7 +16,7 @@
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <!--<Editor x:Name="KeyboardRead" Keyboard="Plain" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />-->
+        <Editor x:Name="KeyboardRead" Keyboard="Plain" Text=" " TextChanged="KeyboardRead_TextChanged" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsVisible="True" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove">
             <Grid.Effects>
                 <tt:TouchEffect Capture="True"
