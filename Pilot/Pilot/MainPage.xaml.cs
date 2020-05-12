@@ -37,20 +37,12 @@ namespace Pilot
                 {
                     if (ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
                         DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-                    else
-                    {
-                        ConnectionClass.Disconnect();
-                    }
                 }
             }
             else
             {
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
                     DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-                else
-                {
-                    ConnectionClass.connected = false;
-                }
             }
         }
 

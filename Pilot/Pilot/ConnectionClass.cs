@@ -56,6 +56,12 @@ namespace Pilot
             {
                 stream.Close();
                 tcpClient.Close();
+
+                stream.Dispose();
+                tcpClient.Dispose();
+
+                connected = false;
+
                 return ConnectionState.DISCONECT_SUCCESS;
             }
             catch (Exception error)
@@ -82,7 +88,6 @@ namespace Pilot
             {
                 try
                 {
-                    ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
                     Byte[] command;
                     Byte[] dataToSend;
                     Byte[] dataToSendEncoded;
@@ -162,7 +167,6 @@ namespace Pilot
                     }
 
                     ConnectionClass.stream.Write(dataToSendEncoded, 0, dataToSendEncoded.Length);
-                    ConnectionClass.Disconnect();
                     return ConnectionState.SEND_SUCCESS;
                 }
                 catch (Exception error)

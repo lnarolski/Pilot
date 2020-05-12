@@ -55,12 +55,12 @@ namespace Pilot
                     DisplayAlert("Błąd numeru portu", ex.ToString(), "OK");
                     return;
                 }
+
                 if (ConnectionClass.Connect(IP_address_entry.Text, Port_entry.Text, Password_entry.Text) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
                     DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
                 else
                 {
                     ConnectButton.Text = "Rozłącz";
-                    ConnectionClass.Disconnect();
                 }
             }
             else
@@ -70,7 +70,6 @@ namespace Pilot
                 else
                 {
                     ConnectButton.Text = "Połącz";
-                    ConnectionClass.connected = false;
                 }
             }
         }
