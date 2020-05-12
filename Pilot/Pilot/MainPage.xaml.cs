@@ -18,6 +18,7 @@ namespace Pilot
         bool moveStart; //rozpoczęcie ruchu palcem
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
         Stopwatch rightMouseTimer; //timer wykorzystywany do określenia lewego lub prawego przycisku myszy
+        bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
             InitializeComponent();
@@ -64,6 +65,14 @@ namespace Pilot
             KeyboardRead.Unfocus();
             Thread.Sleep(100);
             KeyboardRead.Focus();
+
+            if (softKeyboardFirstShow)
+            {
+                KeyboardRead.Text = " ";
+                KeyboardRead.TextChanged += KeyboardRead_TextChanged;
+
+                softKeyboardFirstShow = false;
+            }
         }
 
         private void Button_Config(object sender, EventArgs e) //okno konfiguracji aplikacji
