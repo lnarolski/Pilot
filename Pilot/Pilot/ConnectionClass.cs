@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Pilot
 {
@@ -20,11 +21,31 @@ namespace Pilot
     {
         public static TcpClient tcpClient;
         public static bool connected;
+
+        private static bool readData = false;
+        private static bool readDataStopped = true;
+        private static Task readDataTask;
+
         public static string exceptionText;
         public static string ipAddress;
         public static NetworkStream stream;
         public static short port;
         public static string password = "";
+        private static byte[] readBuffer = new byte[4096];
+
+        private static async void ReceiveData()
+        {
+            readDataStopped = false;
+            try
+            {
+                while (readData)
+                {
+                    await stream.ReadAsync(readBuffer, 0, readBuffer.Length);
+                }
+            }
+            catch (Exception) { }
+            readDataStopped = true;
+        }
         public static ConnectionState Connect(string ipAddress, string port, string password) //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
         {
             try
@@ -41,12 +62,19 @@ namespace Pilot
                 ConnectionClass.port = short.Parse(port);
                 ConnectionClass.password = password;
                 DatabaseClass.UpdateConfig(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
+
+                while (!readDataStopped) { }
+                readData = true;
+                readDataTask = new Task(new Action(ReceiveData));
+                readDataTask.Start();
+
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
             catch (Exception error)
             {
                 exceptionText = error.ToString();
                 connected = false;
+                readData = false;
                 return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
@@ -61,6 +89,7 @@ namespace Pilot
                 tcpClient.Dispose();
 
                 connected = false;
+                readData = false;
 
                 return ConnectionState.DISCONECT_SUCCESS;
             }
@@ -172,6 +201,7 @@ namespace Pilot
                 catch (Exception error)
                 {
                     exceptionText = error.ToString();
+                    Disconnect();
                     return ConnectionState.SEND_NOT_SUCCESS;
                 }
             }
