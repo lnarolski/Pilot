@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:Pilot.Resx"
              x:Class="Pilot.SearchPage">
     <ContentPage.Content>
         <Grid>
@@ -22,7 +23,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StackLayout Grid.Row="0" Grid.Column="1">
-                    <Label Text="Lista serwerów:" HorizontalTextAlignment="Center" FontSize="Medium" Margin="0,0,0,50"/>
+                    <Label Text="{x:Static resources:AppResources.ServersListSearchPage}" HorizontalTextAlignment="Center" FontSize="Medium" Margin="0,0,0,50"/>
                     <Label Text="" x:Name="Text" IsVisible="True" HorizontalTextAlignment="Center"/>
                     <ListView ItemSelected="OnSelection" IsVisible="False" x:Name="IPAddressesListView">
                         <ListView.ItemTemplate>
@@ -38,8 +39,8 @@
                     </ListView>
                 </StackLayout>
             </Grid>
-            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Wstecz" Clicked="CancelButton_Clicked" />
-            <Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="OK" Clicked="OKButton_Clicked" />
+            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="{x:Static resources:AppResources.Back}" Clicked="CancelButton_Clicked" />
+            <Button Grid.Column="1" Grid.Row="1" x:Name="OKButton" Text="{x:Static resources:AppResources.OK}" Clicked="OKButton_Clicked" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

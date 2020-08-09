@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
+using Pilot.Resx;
 
 namespace Pilot
 {
@@ -36,13 +37,13 @@ namespace Pilot
                 if (ConnectionClass.ipAddress != "")
                 {
                     if (ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
-                        DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                        DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                 }
             }
             else
             {
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
             }
         }
 
@@ -93,10 +94,10 @@ namespace Pilot
             switch (sendStatus)
             {
                 case ConnectionState.CONNECTION_NOT_ESTABLISHED:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem", "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError, AppResources.OK);
                     break;
                 case ConnectionState.SEND_NOT_SUCCESS:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                     break;
                 default:
                     break;

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Pilot"
              xmlns:tt="clr-namespace:TouchTracking.Forms;assembly=TouchTracking.Forms"
+             xmlns:resources="clr-namespace:Pilot.Resx"
              x:Class="Pilot.MainPage">
 
     <Grid x:Name="gridPage">
@@ -23,8 +24,8 @@
                                 TouchAction="TouchEffect_TouchAction" />
             </Grid.Effects>
         </Grid>
-        <Button Text="Skróty" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
-        <Button Text="Klawiatura" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
+        <Button Text="{x:Static resources:AppResources.ShortcutsMainPage}" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
+        <Button Text="{x:Static resources:AppResources.KeyboardMainPage}" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
         <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" />
     </Grid>
 
