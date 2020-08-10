@@ -13,29 +13,15 @@ namespace Pilot
 {
     public partial class MainPage : ContentPage
     {
-        Editor KeyboardRead; //pole wykorzystywane do wprowadzania tekstu
+        //Editor KeyboardRead; //pole wykorzystywane do wprowadzania tekstu
         TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
         bool moveStart; //rozpoczęcie ruchu palcem
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
         Stopwatch rightMouseTimer; //timer wykorzystywany do określenia lewego lub prawego przycisku myszy
+        bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
             InitializeComponent();
-
-            KeyboardRead = new Editor
-            {
-                Text = " ",
-                //Keyboard = Keyboard.Plain
-            };
-
-            KeyboardRead.Keyboard = Keyboard.Create(KeyboardFlags.None);
-            KeyboardRead.TextChanged += KeyboardRead_TextChanged;
-            KeyboardRead.IsVisible = false;
-
-            gridPage.Children.Add(KeyboardRead, 0, 0);
-            Grid.SetColumnSpan(KeyboardRead, 3);
-
-            KeyboardRead.IsVisible = false;
 
             rightMouseTimer = new Stopwatch();
 
@@ -77,8 +63,16 @@ namespace Pilot
         private void Show_keyboard(object sender, EventArgs e) //wyświetlenie klawiatury ekranowej
         {
             KeyboardRead.Unfocus();
-            Thread.Sleep(500);
+            Thread.Sleep(100);
             KeyboardRead.Focus();
+
+            if (softKeyboardFirstShow)
+            {
+                KeyboardRead.Text = " ";
+                KeyboardRead.TextChanged += KeyboardRead_TextChanged;
+
+                softKeyboardFirstShow = false;
+            }
         }
 
         private void Button_Config(object sender, EventArgs e) //okno konfiguracji aplikacji

@@ -25,12 +25,14 @@ namespace Pilot
         public static NetworkStream stream;
         public static short port;
         public static string password = "";
-        public static ConnectionState Connect(string ipAddress, string port, string password) { //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
+        public static ConnectionState Connect(string ipAddress, string port, string password) //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
+        {
             try
             {
-                tcpClient = new TcpClient(ipAddress, int.Parse(port));
-                tcpClient.ReceiveTimeout = 500;
-                tcpClient.SendTimeout = 500;
+                tcpClient = new TcpClient();
+                tcpClient.ReceiveTimeout = 5000;
+                tcpClient.SendTimeout = 5000;
+                tcpClient.Connect(ipAddress, int.Parse(port));
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
                 stream.ReadTimeout = 500;

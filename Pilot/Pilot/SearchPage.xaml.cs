@@ -15,6 +15,7 @@ namespace Pilot
     {
         public string IPAddress { get; set; }
         public short port { get; set; }
+        public string name { get; set; }
     }
 
 	[XamlCompilation(XamlCompilationOptions.Compile)]
@@ -49,6 +50,7 @@ namespace Pilot
                 IPAdresses.Add(new FoundServer() {
                     IPAddress = item.IPAddress,
                     port = (short) item.Services["_pilotServer._tcp.local."].Port,
+                    name = item.DisplayName
                 }); //Dodawanie znalezionych adresów IP do listy
             }
             if (IPAdresses.Count == 0)
