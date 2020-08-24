@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
+using Pilot.Resx;
+using System.Globalization;
 
 namespace Pilot
 {
@@ -21,6 +23,11 @@ namespace Pilot
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
+            //CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+            //string language = cultureInfo.TwoLetterISOLanguageName == "pl" ? "pl" : "en";
+            //language = "pl";
+            //ChangeUILanguage(language);
+
             InitializeComponent();
 
             rightMouseTimer = new Stopwatch();
@@ -36,21 +43,26 @@ namespace Pilot
                 if (ConnectionClass.ipAddress != "")
                 {
                     if (ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
-                        DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-                    else
-                    {
-                        ConnectionClass.Disconnect();
-                    }
+                        DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                 }
             }
             else
             {
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
-                else
-                {
-                    ConnectionClass.connected = false;
-                }
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
+            }
+        }
+
+        private void ChangeUILanguage(string language)
+        {
+            switch (language)
+            {
+                case "pl":
+                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("pl-PL");
+                    break;
+                default:
+                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("en");
+                    break;
             }
         }
 
@@ -101,10 +113,10 @@ namespace Pilot
             switch (sendStatus)
             {
                 case ConnectionState.CONNECTION_NOT_ESTABLISHED:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem", "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError, AppResources.OK);
                     break;
                 case ConnectionState.SEND_NOT_SUCCESS:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                     break;
                 default:
                     break;

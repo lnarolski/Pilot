@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SQLite;
+using Pilot.Resx;
 
 namespace Pilot
 {
@@ -21,11 +22,11 @@ namespace Pilot
 
             if (ConnectionClass.connected)
             {
-                ConnectButton.Text = "Rozłącz";
+                ConnectButton.Text = AppResources.Disconnect;
             }
             else
             {
-                ConnectButton.Text = "Połącz";
+                ConnectButton.Text = AppResources.Connect;
             }
             
             IP_address_entry.Text = DatabaseClass.GetLastIPAddress();
@@ -46,31 +47,30 @@ namespace Pilot
                 {
                     if (short.Parse(Port_entry.Text) < 1)
                     {
-                        DisplayAlert("Błąd", "Nieprawidłowy numer portu", "OK");
+                        DisplayAlert(AppResources.Error, AppResources.WrongPortNumberError, AppResources.OK);
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    DisplayAlert("Błąd numeru portu", ex.ToString(), "OK");
+                    DisplayAlert(AppResources.WrongPortNumberError, ex.ToString(), AppResources.OK);
                     return;
                 }
+
                 if (ConnectionClass.Connect(IP_address_entry.Text, Port_entry.Text, Password_entry.Text) == ConnectionState.CONNECTION_NOT_ESTABLISHED)
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                 else
                 {
-                    ConnectButton.Text = "Rozłącz";
-                    ConnectionClass.Disconnect();
+                    ConnectButton.Text = AppResources.Disconnect;
                 }
             }
             else
             {
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                 else
                 {
-                    ConnectButton.Text = "Połącz";
-                    ConnectionClass.connected = false;
+                    ConnectButton.Text = AppResources.Connect;
                 }
             }
         }

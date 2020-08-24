@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:resources="clr-namespace:Pilot.Resx"
              x:Class="Pilot.ConfigPage">
     <ContentPage.Content>
         <Grid>
@@ -23,18 +24,18 @@
                 </Grid.ColumnDefinitions>
                 <ScrollView Grid.Row="0" Grid.Column="1">
                     <StackLayout>
-                        <Label Text="Adres IP komputera:" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
+                        <Label Text="{x:Static resources:AppResources.IPAddressConfigPage}" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
                         <Entry x:Name="IP_address_entry" Text=""/>
-                        <Label Text="Port:" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
+                        <Label Text="{x:Static resources:AppResources.PortConfigPage}" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
                         <Entry x:Name="Port_entry" Text=""/>
-                        <Label Text="Hasło:" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="True"/>
+                        <Label Text="{x:Static resources:AppResources.PasswordConfigPage}" HorizontalTextAlignment="Center" Margin="0,0,0,0" IsVisible="True"/>
                         <Entry x:Name="Password_entry" Text="" IsVisible="True" IsPassword="True"/>
-                        <Button Text="Połącz" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" />
-                        <Button Text="Wyszukaj" x:Name="SearchButton" Clicked="SearchButton_Clicked" />
+                        <Button Text="{x:Static resources:AppResources.ConnectConfigPage}" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" />
+                        <Button Text="{x:Static resources:AppResources.SearchConfigPage}" x:Name="SearchButton" Clicked="SearchButton_Clicked" />
                     </StackLayout>
                 </ScrollView>
             </Grid>
-            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="Wstecz" Clicked="CancelButton_Clicked" />
+            <Button Grid.Column="0" Grid.Row="1" x:Name="CancelButton" Text="{x:Static resources:AppResources.Back}" Clicked="CancelButton_Clicked" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

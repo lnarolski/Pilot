@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pilot.Resx;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace Pilot
             Shortcuts.Add(new ShortcutCell()
             {
                 Image = "plus.png",
-                Text = "Dodaj nowy skrót",
+                Text = AppResources.AddShortcutsPage,
                 WWWAddress = "",
                 ButtonVisible = false,
             });
@@ -55,10 +56,10 @@ namespace Pilot
             switch (connectionState)
             {
                 case ConnectionState.CONNECTION_NOT_ESTABLISHED:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem", "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError, AppResources.OK);
                     break;
                 case ConnectionState.SEND_NOT_SUCCESS:
-                    DisplayAlert("Błąd", "Brak połączenia z komputerem\n" + ConnectionClass.exceptionText, "OK");
+                    DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
                     break;
                 default:
                     break;
@@ -108,7 +109,7 @@ namespace Pilot
 
         private void ShortcutsListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (((ShortcutCell) e.Item).Text == "Dodaj nowy skrót") //Otwarcie formularza dodawania skrótu, gdy treść klikniętej komórki to "Dodaj nowy skrót"
+            if (((ShortcutCell) e.Item).Text == AppResources.AddShortcutsPage) //Otwarcie formularza dodawania skrótu, gdy treść klikniętej komórki to "Dodaj nowy skrót"
             {
                 ShortcutFormPage shortcutFormPage = new ShortcutFormPage();
                 shortcutFormPage.Disappearing += ShortcutFormPage_Disappearing;
