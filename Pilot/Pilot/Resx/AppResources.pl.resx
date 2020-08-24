@@ -118,84 +118,84 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddShortcutFormPage" xml:space="preserve">
-    <value>Add</value>
+    <value>Dodaj</value>
   </data>
   <data name="AddShortcutsPage" xml:space="preserve">
-    <value>Add new shortcut...</value>
+    <value>Dodaj nowy skrót...</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Wstecz</value>
   </data>
   <data name="ChangeShortcutFormPage" xml:space="preserve">
-    <value>Change</value>
+    <value>Zmień</value>
   </data>
   <data name="Connect" xml:space="preserve">
-    <value>Connect</value>
+    <value>Połącz</value>
   </data>
   <data name="ConnectConfigPage" xml:space="preserve">
-    <value>Connect</value>
+    <value>Połącz</value>
   </data>
   <data name="DeleteShortcutFormPage" xml:space="preserve">
-    <value>DELETE SHORTCUT</value>
+    <value>USUŃ SKRÓT</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
-    <value>Disconnect</value>
+    <value>Rozłącz</value>
   </data>
   <data name="EditShortcutsPage" xml:space="preserve">
-    <value>Edit</value>
+    <value>Edytuj</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Error</value>
+    <value>Błąd</value>
   </data>
   <data name="IPAddressConfigPage" xml:space="preserve">
-    <value>Computer IP address:</value>
+    <value>Adres IP komputera:</value>
   </data>
   <data name="KeyboardMainPage" xml:space="preserve">
-    <value>Keyboard</value>
+    <value>Klawiatura</value>
   </data>
   <data name="NameShortcutFormPage" xml:space="preserve">
-    <value>Title:</value>
+    <value>Nazwa:</value>
   </data>
   <data name="NoConnectionError" xml:space="preserve">
-    <value>Computer no connection</value>
+    <value>Brak połączenia z komputerem</value>
   </data>
   <data name="NotFoundSearchPage" xml:space="preserve">
-    <value>Servers not found</value>
+    <value>Nie znaleziono serwerów</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="PasswordConfigPage" xml:space="preserve">
-    <value>Password:</value>
+    <value>Hasło:</value>
   </data>
   <data name="PlaybackControlShortcutsPage" xml:space="preserve">
-    <value>Playback control:</value>
+    <value>Kontrola odtwarzania:</value>
   </data>
   <data name="PortConfigPage" xml:space="preserve">
     <value>Port:</value>
   </data>
   <data name="SearchConfigPage" xml:space="preserve">
-    <value>Search</value>
+    <value>Szukaj</value>
   </data>
   <data name="SearchingSearchPage" xml:space="preserve">
-    <value>Searching servers...</value>
+    <value>Wyszukiwanie...</value>
   </data>
   <data name="ServersListSearchPage" xml:space="preserve">
-    <value>Servers list:</value>
+    <value>Lista serwerów:</value>
   </data>
   <data name="Shortcuts" xml:space="preserve">
-    <value>Shortcuts</value>
+    <value>Skróty</value>
   </data>
   <data name="URLExampleShortcutFormPage" xml:space="preserve">
-    <value>www.example.com or example.com</value>
+    <value>www.example.com lub example.com</value>
   </data>
   <data name="URLShortcutFormPage" xml:space="preserve">
-    <value>URL:</value>
+    <value>Adres WWW:</value>
   </data>
   <data name="WrongPortNumberError" xml:space="preserve">
-    <value>Wrong port number</value>
+    <value>Nieprawidłowy numer portu</value>
   </data>
   <data name="WrongShortcutNameError" xml:space="preserve">
-    <value>Wrong shortcut name</value>
+    <value>Nieprawidłowa nazwa skrótu</value>
   </data>
 </root>

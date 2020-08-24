@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
 using Pilot.Resx;
+using System.Globalization;
 
 namespace Pilot
 {
@@ -22,6 +23,11 @@ namespace Pilot
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
+            //CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+            //string language = cultureInfo.TwoLetterISOLanguageName == "pl" ? "pl" : "en";
+            //language = "pl";
+            //ChangeUILanguage(language);
+
             InitializeComponent();
 
             rightMouseTimer = new Stopwatch();
@@ -44,6 +50,19 @@ namespace Pilot
             {
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
                     DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
+            }
+        }
+
+        private void ChangeUILanguage(string language)
+        {
+            switch (language)
+            {
+                case "pl":
+                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("pl-PL");
+                    break;
+                default:
+                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("en");
+                    break;
             }
         }
 

@@ -61,7 +61,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dodaj.
+        ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string AddShortcutFormPage {
             get {
@@ -70,7 +70,16 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wstecz.
+        ///   Looks up a localized string similar to Add new shortcut....
+        /// </summary>
+        public static string AddShortcutsPage {
+            get {
+                return ResourceManager.GetString("AddShortcutsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back.
         /// </summary>
         public static string Back {
             get {
@@ -79,7 +88,16 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Połącz.
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        public static string ChangeShortcutFormPage {
+            get {
+                return ResourceManager.GetString("ChangeShortcutFormPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect.
         /// </summary>
         public static string Connect {
             get {
@@ -88,7 +106,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Połącz.
+        ///   Looks up a localized string similar to Connect.
         /// </summary>
         public static string ConnectConfigPage {
             get {
@@ -97,7 +115,16 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rozłącz.
+        ///   Looks up a localized string similar to DELETE SHORTCUT.
+        /// </summary>
+        public static string DeleteShortcutFormPage {
+            get {
+                return ResourceManager.GetString("DeleteShortcutFormPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disconnect.
         /// </summary>
         public static string Disconnect {
             get {
@@ -106,7 +133,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edytuj.
+        ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string EditShortcutsPage {
             get {
@@ -115,7 +142,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Błąd.
+        ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
             get {
@@ -124,7 +151,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adres IP komputera:.
+        ///   Looks up a localized string similar to Computer IP address:.
         /// </summary>
         public static string IPAddressConfigPage {
             get {
@@ -133,7 +160,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Klawiatura.
+        ///   Looks up a localized string similar to Keyboard.
         /// </summary>
         public static string KeyboardMainPage {
             get {
@@ -142,7 +169,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nazwa:.
+        ///   Looks up a localized string similar to Title:.
         /// </summary>
         public static string NameShortcutFormPage {
             get {
@@ -151,11 +178,20 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Brak połączenia z komputerem.
+        ///   Looks up a localized string similar to Computer no connection.
         /// </summary>
         public static string NoConnectionError {
             get {
                 return ResourceManager.GetString("NoConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Servers not found.
+        /// </summary>
+        public static string NotFoundSearchPage {
+            get {
+                return ResourceManager.GetString("NotFoundSearchPage", resourceCulture);
             }
         }
         
@@ -169,7 +205,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hasło:.
+        ///   Looks up a localized string similar to Password:.
         /// </summary>
         public static string PasswordConfigPage {
             get {
@@ -178,7 +214,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kontrola odtwarzania:.
+        ///   Looks up a localized string similar to Playback control:.
         /// </summary>
         public static string PlaybackControlShortcutsPage {
             get {
@@ -196,7 +232,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Szukaj.
+        ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string SearchConfigPage {
             get {
@@ -205,7 +241,16 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lista serwerów:.
+        ///   Looks up a localized string similar to Searching servers....
+        /// </summary>
+        public static string SearchingSearchPage {
+            get {
+                return ResourceManager.GetString("SearchingSearchPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Servers list:.
         /// </summary>
         public static string ServersListSearchPage {
             get {
@@ -214,7 +259,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skróty.
+        ///   Looks up a localized string similar to Shortcuts.
         /// </summary>
         public static string Shortcuts {
             get {
@@ -223,7 +268,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to www.example.com lub example.com.
+        ///   Looks up a localized string similar to www.example.com or example.com.
         /// </summary>
         public static string URLExampleShortcutFormPage {
             get {
@@ -232,7 +277,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adres WWW:.
+        ///   Looks up a localized string similar to URL:.
         /// </summary>
         public static string URLShortcutFormPage {
             get {
@@ -241,11 +286,20 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nieprawidłowy numer portu.
+        ///   Looks up a localized string similar to Wrong port number.
         /// </summary>
         public static string WrongPortNumberError {
             get {
                 return ResourceManager.GetString("WrongPortNumberError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong shortcut name.
+        /// </summary>
+        public static string WrongShortcutNameError {
+            get {
+                return ResourceManager.GetString("WrongShortcutNameError", resourceCulture);
             }
         }
     }

@@ -24,7 +24,7 @@
                                 TouchAction="TouchEffect_TouchAction" />
             </Grid.Effects>
         </Grid>
-        <Button Text="{x:Static resources:AppResources.ShortcutsMainPage}" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
+        <Button Text="{x:Static resources:AppResources.Shortcuts}" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
         <Button Text="{x:Static resources:AppResources.KeyboardMainPage}" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
         <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" />
     </Grid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pilot.Resx;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace Pilot
 
                 Button DeleteButton = new Button()
                 {
-                    Text = "USUŃ SKRÓT",
+                    Text = AppResources.DeleteShortcutFormPage,
                     BackgroundColor = Color.Red,
                     TextColor = Color.White,
                     Margin = new Thickness(50,100),
@@ -36,7 +37,7 @@ namespace Pilot
                 DeleteButton.Clicked += DeleteButton_Clicked;
                 FormStackLayout.Children.Add(DeleteButton);
 
-                AcceptButton.Text = "Zmień";
+                AcceptButton.Text = AppResources.ChangeShortcutFormPage;
             }
 		}
 
@@ -47,7 +48,7 @@ namespace Pilot
             if (DatabaseClass.DatabaseState == DatabaseState.DATABASE_OK)
                 Navigation.PopModalAsync();
             else
-                DisplayAlert("Wystąpił błąd", DatabaseClass.exceptionText, "OK");
+                DisplayAlert(AppResources.Error, DatabaseClass.exceptionText, AppResources.OK);
         }
 
         private void BackButton_Clicked(object sender, EventArgs e)
@@ -57,9 +58,9 @@ namespace Pilot
 
         private void AcceptButton_Clicked(object sender, EventArgs e)
         {
-            if (TextEntry.Text == "Dodaj nowy skrót")
+            if (TextEntry.Text == AppResources.AddShortcutsPage)
             {
-                DisplayAlert("Wystąpił błąd", "Nieprawidłowa nazwa skrótu", "OK");
+                DisplayAlert(AppResources.Error, AppResources.WrongShortcutNameError, AppResources.OK);
                 return;
             }
 
@@ -79,7 +80,7 @@ namespace Pilot
             if (DatabaseClass.DatabaseState == DatabaseState.DATABASE_OK)
                 Navigation.PopModalAsync();
             else
-                DisplayAlert("Wystąpił błąd", DatabaseClass.exceptionText, "OK");
+                DisplayAlert(AppResources.Error, DatabaseClass.exceptionText, AppResources.OK);
         }
     }
 }

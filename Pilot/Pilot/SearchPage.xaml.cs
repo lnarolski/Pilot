@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pilot.Resx;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Pilot
 			InitializeComponent ();
             OKButton.IsEnabled = false; //Wyłączenie przycisku OK to czasu wybrania adresu IP serwera przez użytkownika
 
-            Text.Text = "Wyszukiwanie serwera..."; //Wyświetlenie komunikatu
+            Text.Text = AppResources.SearchingSearchPage; //Wyświetlenie komunikatu
 
             task = ProbeForNetworkServers(); //Uruchomienie zadania wyszukiwania uług w sieci
         }
@@ -55,7 +56,7 @@ namespace Pilot
             }
             if (IPAdresses.Count == 0)
             {
-                Text.Text = "Nie odnaleziono serwerów."; //Wyświetlenie komunikatu o nieznalezieniu serwerów w seci lokalnej
+                Text.Text = AppResources.NotFoundSearchPage; //Wyświetlenie komunikatu o nieznalezieniu serwerów w seci lokalnej
             }
             else
             {
