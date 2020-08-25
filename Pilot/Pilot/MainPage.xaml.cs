@@ -23,11 +23,6 @@ namespace Pilot
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
-            //CultureInfo cultureInfo = CultureInfo.CurrentCulture;
-            //string language = cultureInfo.TwoLetterISOLanguageName == "pl" ? "pl" : "en";
-            //language = "pl";
-            //ChangeUILanguage(language);
-
             InitializeComponent();
 
             rightMouseTimer = new Stopwatch();
