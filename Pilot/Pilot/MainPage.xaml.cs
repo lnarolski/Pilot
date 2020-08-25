@@ -48,19 +48,6 @@ namespace Pilot
             }
         }
 
-        private void ChangeUILanguage(string language)
-        {
-            switch (language)
-            {
-                case "pl":
-                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("pl-PL");
-                    break;
-                default:
-                    System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("en");
-                    break;
-            }
-        }
-
         private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami
         {
             ShortcutsPage shortcutsPage = new ShortcutsPage();
