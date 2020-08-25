@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Net.Wifi;
 using Android.Content;
+using MediaManager;
 
 namespace Pilot.Droid
 {
@@ -16,15 +17,13 @@ namespace Pilot.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            WifiManager wifi = (WifiManager) GetSystemService(Context.WifiService);
-            wifi.SetWifiEnabled(true);
-
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            CrossMediaManager.Current.Init(this);
             LoadApplication(new App());
         }
 

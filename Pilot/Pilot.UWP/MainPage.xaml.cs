@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaManager;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Pilot.UWP
         {
             this.InitializeComponent();
 
+            CrossMediaManager.Current.Init();
             LoadApplication(new Pilot.App());
         }
     }

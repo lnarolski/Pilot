@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Plugin.MediaManager" Version="1.0.1" />
+    <PackageReference Include="Plugin.MediaManager.Forms" Version="1.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="TouchTracking" Version="1.1.0" />
     <PackageReference Include="TouchTracking.Forms" Version="1.1.0" />
