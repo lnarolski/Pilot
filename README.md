@@ -20,5 +20,5 @@ Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z 
 - Dodanie obsługi połączenia przez protokół UDP
 - Dodanie zabezpieczenia przed powielaniem pakietów z poleceniami
 - Dodanie włączania WiFi w telefonie podczas uruchamiania aplikacji
-- Dodanie możliwości zmiany języka na angielski
 - Dodanie kontroli multimediów spoza aplikacji (np. przez ekran blokady lub opaskę Mi Band)
+- Zmiana biblioteki do wykrywania gestów dotyku
