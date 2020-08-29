@@ -178,7 +178,7 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Computer no connection.
+        ///   Looks up a localized string similar to No computer connection.
         /// </summary>
         public static string NoConnectionError {
             get {

@@ -157,7 +157,7 @@
     <value>Title:</value>
   </data>
   <data name="NoConnectionError" xml:space="preserve">
-    <value>Computer no connection</value>
+    <value>No computer connection</value>
   </data>
   <data name="NotFoundSearchPage" xml:space="preserve">
     <value>Servers not found</value>
