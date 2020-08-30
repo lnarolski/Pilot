@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Pilot
 {
@@ -20,7 +21,21 @@ namespace Pilot
     static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
     {
         public static TcpClient tcpClient;
-        public static bool connected;
+
+        public static Image connectedIndicatorImage;
+        private static bool connectedValue;
+        public static bool connected {
+            get { return connectedValue; }
+            set 
+            {
+                if (connectedIndicatorImage != null)
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        connectedIndicatorImage.IsVisible = value;
+                    });
+                connectedValue = value;
+            }
+        }
 
         private static bool readData = false;
         private static bool readDataStopped = true;
