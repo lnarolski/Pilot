@@ -3,9 +3,9 @@ Mobilna aplikacja do zdalnego sterowania komputerem poprzez sieć komputerową d
 
 |Android|Windows (UWP)|
 |:-------------------------:|:-------------------------:|
-|<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot1-android.png">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot1-uwp.png">|
+|<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot1-android.jpg">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot1-uwp.png">|
 |<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot2-android.png">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot2-uwp.png">|
-|<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot3-android.png">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot3-uwp.png">|
+|<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot3-android.jpg">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot3-uwp.png">|
 |<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot4-android.png">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot4-uwp.png">|
 
 # Działanie
