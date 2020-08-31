@@ -25,6 +25,8 @@ namespace Pilot
         {
             InitializeComponent();
 
+            ConnectionClass.connectedIndicatorImage = this.connectedIndicatorImage;
+
             rightMouseTimer = new Stopwatch();
 
             ConnectionClass.connected = false;

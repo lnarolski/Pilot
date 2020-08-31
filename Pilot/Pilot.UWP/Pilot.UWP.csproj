@@ -24,7 +24,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <PackageCertificateThumbprint>414D47310DB5F3CF7D5425F0BC54AC2B21749D57</PackageCertificateThumbprint>
-    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
@@ -159,12 +159,14 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="connected.png" />
     <Content Include="ic_play_circle_outline.png" />
     <Content Include="ic_skip_next.png" />
     <Content Include="ic_skip_previous.png" />
     <Content Include="ic_stop.png" />
     <Content Include="ic_volume_down.png" />
     <Content Include="ic_volume_up.png" />
+    <Content Include="mouse.png" />
     <Content Include="plus.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
