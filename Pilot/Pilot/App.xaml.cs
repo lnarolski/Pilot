@@ -22,11 +22,15 @@ namespace Pilot
         protected override void OnSleep()
         {
             // Handle when your app sleeps
+            if (ConnectionClass.connected)
+                ConnectionClass.Disconnect();
         }
 
         protected override void OnResume()
         {
             // Handle when your app resumes
+            if (!ConnectionClass.connected && ConnectionClass.ipAddress != "")
+                ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
         }
     }
 }
