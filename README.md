@@ -1,4 +1,6 @@
 # Pilot
+[![pobierz z Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/pl_badge_web_generic.png)](https://play.google.com/store/apps/details?id=pl.lnarolski.pilot&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
+
 Mobilna aplikacja do zdalnego sterowania komputerem poprzez sieć komputerową dla systemów Android i Windows (UWP). Sterowany komputer musi posiadać uruchomioną [aplikację serwera](https://github.com/lnarolski/PilotServer).
 
 |Android|Windows (UWP)|
