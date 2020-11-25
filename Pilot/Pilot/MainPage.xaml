@@ -4,21 +4,24 @@
              xmlns:local="clr-namespace:Pilot"
              xmlns:tt="clr-namespace:TouchTracking.Forms;assembly=TouchTracking.Forms"
              xmlns:resources="clr-namespace:Pilot.Resx"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:components="clr-namespace:Pilot" 
              x:Class="Pilot.MainPage">
 
     <Grid x:Name="gridPage">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Image x:Name="connectedIndicatorImage" Source="connected.png" Margin="10" HorizontalOptions="End" Grid.Row="0" Grid.Column="2"/>
-        <Editor x:Name="KeyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsVisible="True" />
+        <Image x:Name="connectedIndicatorImage" Source="connected.png" Margin="10" HorizontalOptions="End" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"/>
+        <Editor x:Name="keyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" IsVisible="False" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove" >
             <Grid.Effects>
                 <tt:TouchEffect Capture="True"
@@ -26,9 +29,20 @@
             </Grid.Effects>
             <Image Source="mouse.png" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Opacity="0.5" />
         </Grid>
+        <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <components:VerticalContentView Grid.Row="1">
+                <Slider x:Name="mouseWheelSlider" Minimum="-10" Maximum="10" VerticalOptions="Center"/>
+            </components:VerticalContentView>
+            <Image Source="mouseWheelIcon.png" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Opacity="0.5" Grid.Row="2"/>
+        </Grid>
         <Button Text="{x:Static resources:AppResources.Shortcuts}" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
         <Button Text="{x:Static resources:AppResources.KeyboardMainPage}" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
-        <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" />
+        <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" />
     </Grid>
 
 </ContentPage>
