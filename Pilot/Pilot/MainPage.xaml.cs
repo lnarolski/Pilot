@@ -13,9 +13,49 @@ using System.Globalization;
 
 namespace Pilot
 {
+    [ContentProperty("VerticalContent")]
+    public class VerticalContentView : ContentView
+    {
+        public View VerticalContent
+        {
+            get => (View)GetValue(ContentProperty);
+            set => SetValue(ContentProperty, Verticalize(value));
+        }
+
+        public double ContentRotation { get; set; } = -90;
+
+        private View Verticalize(View toBeRotated)
+        {
+            if (toBeRotated == null)
+                return null;
+
+            toBeRotated.Rotation = ContentRotation;
+            var result = new RelativeLayout();
+
+            result.Children.Add(toBeRotated,
+            xConstraint: Constraint.RelativeToParent((parent) =>
+            {
+                return parent.X - ((parent.Height - parent.Width) / 2);
+            }),
+            yConstraint: Constraint.RelativeToParent((parent) =>
+            {
+                return (parent.Height / 2) - (parent.Width / 2);
+            }),
+            widthConstraint: Constraint.RelativeToParent((parent) =>
+            {
+                return parent.Height;
+            }),
+            heightConstraint: Constraint.RelativeToParent((parent) =>
+            {
+                return parent.Width;
+            }));
+
+            return result;
+        }
+    }
     public partial class MainPage : ContentPage
     {
-        //Editor KeyboardRead; //pole wykorzystywane do wprowadzania tekstu
+        //Editor keyboardRead; //pole wykorzystywane do wprowadzania tekstu
         TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
         bool moveStart; //rozpoczęcie ruchu palcem
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
@@ -48,6 +88,34 @@ namespace Pilot
                 if (ConnectionClass.Disconnect() == ConnectionState.DISCONECT_NOT_SUCCESS)
                     DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
             }
+
+            mouseWheelSlider.DragCompleted += MouseWheelSlider_DragCompleted;
+            mouseWheelSlider.DragStarted += MouseWheelSlider_DragStarted;
+        }
+
+        private bool dragFinished = true;
+
+        private void MouseWheelSlider_DragCompleted(object sender, EventArgs e) //powrót rolki myszki do pierwotnej pozycji
+        {
+            dragFinished = true;
+            mouseWheelSlider.Value = 0;
+            Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
+            ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
+        }
+
+        private async void MouseWheelSlider_DragStarted(object sender, EventArgs e)
+        {
+            dragFinished = false;
+            await Task.Run(async () =>
+            {
+                do
+                {
+                    Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
+                    ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
+
+                    Thread.Sleep(100);
+                } while (!dragFinished);
+            });
         }
 
         private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami
@@ -58,14 +126,14 @@ namespace Pilot
 
         private void Show_keyboard(object sender, EventArgs e) //wyświetlenie klawiatury ekranowej
         {
-            KeyboardRead.Unfocus();
+            keyboardRead.Unfocus();
             Thread.Sleep(100);
-            KeyboardRead.Focus();
+            keyboardRead.Focus();
 
             if (softKeyboardFirstShow)
             {
-                KeyboardRead.Text = " ";
-                KeyboardRead.TextChanged += KeyboardRead_TextChanged;
+                keyboardRead.Text = " ";
+                keyboardRead.TextChanged += keyboardRead_TextChanged;
 
                 softKeyboardFirstShow = false;
             }
@@ -77,20 +145,20 @@ namespace Pilot
             Navigation.PushModalAsync(configPage);
         }
 
-        private void KeyboardRead_TextChanged(object sender, TextChangedEventArgs e) //zdarzenie generowane podczas wprowadzania tekstu
+        private void keyboardRead_TextChanged(object sender, TextChangedEventArgs e) //zdarzenie generowane podczas wprowadzania tekstu
         {
-            if (KeyboardRead.Text.Length == 1) //unikanie dublowania wywoływania zdarzenia
+            if (keyboardRead.Text.Length == 1) //unikanie dublowania wywoływania zdarzenia
                 return;
             
             Byte[] text; //odczytany tekst
             ConnectionState sendStatus;
-            if (KeyboardRead.Text.Length == 0) //w przypadku usunięcia znaku wysłanie klawisza BACKSPACE
+            if (keyboardRead.Text.Length == 0) //w przypadku usunięcia znaku wysłanie klawisza BACKSPACE
             {
                 sendStatus = ConnectionClass.Send(Commands.SEND_BACKSPACE);
             }
             else //wysłanie tekstu
             {
-                text = System.Text.Encoding.UTF8.GetBytes(KeyboardRead.Text.Substring(1));
+                text = System.Text.Encoding.UTF8.GetBytes(keyboardRead.Text.Substring(1));
                 sendStatus = ConnectionClass.Send(Commands.SEND_TEXT, text);
             }
 
@@ -105,7 +173,7 @@ namespace Pilot
                 default:
                     break;
             }
-            KeyboardRead.Text = " "; //przywrócenie tekstu początkowego
+            keyboardRead.Text = " "; //przywrócenie tekstu początkowego
         }
 
         private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args) //zdarzenie związane z dotykaniem "szarego" obszaru
