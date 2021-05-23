@@ -21,7 +21,7 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Image x:Name="connectedIndicatorImage" Source="connected.png" Margin="10" HorizontalOptions="End" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"/>
-        <Editor x:Name="keyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" IsVisible="False" />
+        <Editor x:Name="keyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" IsVisible="True" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove" >
             <Grid.Effects>
                 <tt:TouchEffect Capture="True"

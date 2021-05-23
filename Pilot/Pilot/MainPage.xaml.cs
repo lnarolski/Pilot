@@ -127,7 +127,7 @@ namespace Pilot
         private void Show_keyboard(object sender, EventArgs e) //wyświetlenie klawiatury ekranowej
         {
             keyboardRead.Unfocus();
-            Thread.Sleep(100);
+            Thread.Sleep(200);
             keyboardRead.Focus();
 
             if (softKeyboardFirstShow)
