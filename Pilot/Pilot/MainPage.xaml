@@ -36,7 +36,7 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <components:VerticalContentView Grid.Row="1">
-                <Slider x:Name="mouseWheelSlider" Minimum="-10" Maximum="10" VerticalOptions="Center"/>
+                <Slider x:Name="mouseWheelSlider" Maximum="100" Minimum="-100" VerticalOptions="Center"/>
             </components:VerticalContentView>
             <Image Source="mouseWheelIcon.png" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Opacity="0.5" Grid.Row="2"/>
         </Grid>

@@ -89,8 +89,8 @@ namespace Pilot
                     DisplayAlert(AppResources.Error, AppResources.NoConnectionError + "\n" + ConnectionClass.exceptionText, AppResources.OK);
             }
 
-            mouseWheelSlider.DragStarted += MouseWheelSlider_DragStarted;
             mouseWheelSlider.DragCompleted += MouseWheelSlider_DragCompleted;
+            mouseWheelSlider.DragStarted += MouseWheelSlider_DragStarted;
         }
 
         private bool dragFinished = true;
@@ -99,20 +99,23 @@ namespace Pilot
         {
             dragFinished = true;
             mouseWheelSlider.Value = 0;
+            Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
+            ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
         }
 
-        private void MouseWheelSlider_DragStarted(object sender, EventArgs e)
+        private async void MouseWheelSlider_DragStarted(object sender, EventArgs e)
         {
             dragFinished = false;
-            do
+            await Task.Run(async () =>
             {
-                Byte[] sliderValue = BitConverter.GetBytes((Int32) mouseWheelSlider.Value);
-                Byte[] data = new Byte[sliderValue.Length];
-                Buffer.BlockCopy(sliderValue, 0, data, 0, sliderValue.Length);
-                ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, data);
+                do
+                {
+                    Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
+                    ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
 
-                Thread.Sleep(500);
-            } while (!dragFinished);
+                    Thread.Sleep(100);
+                } while (!dragFinished);
+            });
         }
 
         private void Button_Shortcuts(object sender, EventArgs e) //otworzenie strony ze skrótami
