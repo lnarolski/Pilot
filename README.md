@@ -24,6 +24,5 @@ W przypadku niektórych programów (np. menedżera zadań, itd.) wymagane jest u
 - Dodanie zabezpieczenia przed powielaniem pakietów z poleceniami
 - Dodanie kontroli multimediów spoza aplikacji (np. przez ekran blokady lub opaskę Mi Band)
 - Zmiana biblioteki do wykrywania gestów dotyku
-- Dodanie obsługi rolki myszy
 
 # [Więcej informacji](https://narolski.eu/2020/09/23/pilot-opis-projektu/)
