@@ -20,9 +20,9 @@ W przypadku niektórych programów (np. menedżera zadań, itd.) wymagane jest u
 # [Zrzuty ekranu](https://github.com/lnarolski/Pilot/tree/master/Screenshots)
 
 # TODO
-- Dodanie obsługi połączenia przez protokół UDP
 - Dodanie zabezpieczenia przed powielaniem pakietów z poleceniami
 - Dodanie kontroli multimediów spoza aplikacji (np. przez ekran blokady lub opaskę Mi Band)
 - Zmiana biblioteki do wykrywania gestów dotyku
+- Zmiana sposobu generowania komendy wciśnięcia prawego przycisku myszy
 
 # [Więcej informacji](https://narolski.eu/2020/09/23/pilot-opis-projektu/)
