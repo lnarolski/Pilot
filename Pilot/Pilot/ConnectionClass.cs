@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pilot.Resx;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -23,6 +24,7 @@ namespace Pilot
         public static TcpClient tcpClient;
 
         public static Image connectedIndicatorImage;
+        public static Label connectedIndicatorLabel;
         private static bool connectedValue;
         public static bool connected {
             get { return connectedValue; }
@@ -32,6 +34,11 @@ namespace Pilot
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         connectedIndicatorImage.IsVisible = value;
+                    });
+                if (connectedIndicatorLabel != null)
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        connectedIndicatorLabel.IsVisible = value;
                     });
                 connectedValue = value;
             }

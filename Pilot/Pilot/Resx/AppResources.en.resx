@@ -135,11 +135,17 @@
   <data name="ConnectConfigPage" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
   <data name="DeleteShortcutFormPage" xml:space="preserve">
     <value>DELETE SHORTCUT</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
     <value>Disconnect</value>
+  </data>
+  <data name="Disconnected" xml:space="preserve">
+    <value>Disconnected</value>
   </data>
   <data name="EditShortcutsPage" xml:space="preserve">
     <value>Edit</value>

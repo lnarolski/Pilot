@@ -20,7 +20,17 @@
             <RowDefinition Height="10*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Image x:Name="connectedIndicatorImage" Source="connected.png" Margin="10" HorizontalOptions="End" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"/>
+        <Grid Grid.Row="0" Grid.Column="3" HorizontalOptions="End">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Image x:Name="connectedIndicatorImage" Source="connected.png" Margin="5" HorizontalOptions="Center" Grid.Row="0" IsVisible="false"/>
+            <Label x:Name="connectedIndicatorLabel" FontSize="Micro" Text="{x:Static resources:AppResources.Connected}" HorizontalOptions="Center" Grid.Row="1" IsVisible="false"/>
+        </Grid>
         <Editor x:Name="keyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" IsVisible="True" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove" >
             <Grid.Effects>
