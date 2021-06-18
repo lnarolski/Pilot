@@ -58,8 +58,10 @@ namespace Pilot
         //Editor keyboardRead; //pole wykorzystywane do wprowadzania tekstu
         TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
         bool moveStart; //rozpoczęcie ruchu palcem
+        bool doubleTapStarted; //flaga informująca o wykryciu podwójnego dotknięcia ekranu
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
         Stopwatch rightMouseTimer; //timer wykorzystywany do określenia lewego lub prawego przycisku myszy
+        Stopwatch doubleTapMouseTimer; //timer wykorzystywany do określenia długiego wciśnięcia lewego przycisku myszy
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
         public MainPage()
         {
@@ -69,6 +71,7 @@ namespace Pilot
             ConnectionClass.connectedIndicatorLabel = this.connectedIndicatorLabel;
 
             rightMouseTimer = new Stopwatch();
+            doubleTapMouseTimer = new Stopwatch();
 
             ConnectionClass.connected = false;
             ConnectionClass.ipAddress = DatabaseClass.GetLastIPAddress();
@@ -184,10 +187,23 @@ namespace Pilot
                 case TouchTracking.TouchActionType.Entered:
                     break;
                 case TouchTracking.TouchActionType.Pressed:
-                    touchPressed = true;
-                    touchMoved = false;
-                    touchReleased = false;
-                    rightMouseTimer.Start();
+                    if (doubleTapMouseTimer.IsRunning && doubleTapMouseTimer.ElapsedMilliseconds < 300) // Gdy wykryto podwójne wciśnięcie w czasie mniejszym niż 300 ms
+                    {
+                        rightMouseTimer.Stop();
+                        doubleTapMouseTimer.Stop();
+
+                        doubleTapStarted = true;
+                        ConnectionClass.Send(Commands.SEND_LEFT_MOUSE_LONG_PRESS_START);
+                    }
+                    else
+                    {
+                        touchPressed = true;
+                        touchMoved = false;
+                        touchReleased = false;
+                        rightMouseTimer.Start();
+                        doubleTapMouseTimer.Reset();
+                        doubleTapMouseTimer.Start();
+                    }
                     break;
                 case TouchTracking.TouchActionType.Moved:
                     if (moveStart)
@@ -221,7 +237,12 @@ namespace Pilot
                     moveStart = true;
                     touchReleased = true;
                     rightMouseTimer.Stop();
-                    if (touchPressed && !touchMoved)
+                    if (doubleTapStarted)
+                    {
+                        ConnectionClass.Send(Commands.SEND_LEFT_MOUSE_LONG_PRESS_STOP);
+                        doubleTapStarted = false;
+                    }
+                    else if (touchPressed && !touchMoved)
                         if (rightMouseTimer.ElapsedMilliseconds > 800)
                             ConnectionClass.Send(Commands.SEND_RIGHT_MOUSE);
                         else

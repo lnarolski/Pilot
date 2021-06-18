@@ -19,5 +19,7 @@ namespace Pilot
         SEND_VOLUP,
         SEND_OPEN_WEBPAGE,
         SEND_WHEEL_MOUSE,
+        SEND_LEFT_MOUSE_LONG_PRESS_START,
+        SEND_LEFT_MOUSE_LONG_PRESS_STOP,
     }
 }
