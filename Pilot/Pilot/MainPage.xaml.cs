@@ -116,6 +116,7 @@ namespace Pilot
                 {
                     Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
                     ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
+                    //Debug.WriteLine("Slider value:" + (Int32)mouseWheelSlider.Value);
 
                     Thread.Sleep(100);
                 } while (!dragFinished);

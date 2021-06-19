@@ -1,6 +1,7 @@
 ﻿using Pilot.Resx;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -55,6 +56,9 @@ namespace Pilot
         public static string password = "";
         private static byte[] readBuffer = new byte[4096];
 
+        public static bool afterAutoreconnect = false;
+        public static bool startApplicationConnectAttempt = true;
+
         private static async void ReceiveData()
         {
             readDataStopped = false;
@@ -90,6 +94,8 @@ namespace Pilot
                 readDataTask = new Task(new Action(ReceiveData));
                 readDataTask.Start();
 
+                startApplicationConnectAttempt = false;
+
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
             catch (Exception error)
@@ -102,6 +108,8 @@ namespace Pilot
         }
         public static ConnectionState Disconnect() //zakończenie połączenia
         {
+            if (stream == null || tcpClient == null)
+                return ConnectionState.DISCONECT_NOT_SUCCESS;
             try
             {
                 stream.Close();
@@ -135,6 +143,21 @@ namespace Pilot
 
         public static ConnectionState Send(Commands commands, Byte[] data = null) //wysyłanie polecenia
         {
+            if (!startApplicationConnectAttempt && (!afterAutoreconnect && !tcpClient.Connected || !ConnectionClass.connected))
+            {
+                afterAutoreconnect = true;
+
+                Disconnect();
+                for (int i = 0; i < 5; i++) //próba ponownego połączenia w przypadku utraty łączności
+                {
+                    Connect(ipAddress, port.ToString(), password);
+                    if (tcpClient.Connected && ConnectionClass.connected)
+                    {
+                        afterAutoreconnect = false;
+                        break;
+                    }
+                }
+            }
             if (ConnectionClass.connected)
             {
                 try
@@ -148,6 +171,7 @@ namespace Pilot
                     _aes = new AesCryptoServiceProvider();
                     _aes.KeySize = 256;
                     _aes.BlockSize = 128;
+                    _aes.Padding = PaddingMode.Zeros;
 
                     if (data == null)
                     {

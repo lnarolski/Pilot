@@ -286,6 +286,15 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Third party licenses:.
+        /// </summary>
+        public static string ThirdPartyLicenses {
+            get {
+                return ResourceManager.GetString("ThirdPartyLicenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to www.example.com or example.com.
         /// </summary>
         public static string URLExampleShortcutFormPage {

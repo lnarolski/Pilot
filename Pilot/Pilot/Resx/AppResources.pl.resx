@@ -192,6 +192,9 @@
   <data name="Shortcuts" xml:space="preserve">
     <value>Skróty</value>
   </data>
+  <data name="ThirdPartyLicenses" xml:space="preserve">
+    <value>Licencje osób trzecich:</value>
+  </data>
   <data name="URLExampleShortcutFormPage" xml:space="preserve">
     <value>www.example.com lub example.com</value>
   </data>

@@ -11,14 +11,25 @@ using Pilot.Resx;
 
 namespace Pilot
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ConfigPage : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class ConfigPage : ContentPage
+    {
         public string SelectedIPAddress;
         public short SelectedPort;
-        public ConfigPage ()
-		{
-			InitializeComponent();
+        public ConfigPage()
+        {
+            InitializeComponent();
+
+            ThirdPartyLicensesLabel.Text = "dotnet:\n" +
+                "The MIT License(MIT)\nCopyright(c) 2019 Microsoft\n\n" +
+                "sqlite-net:\n" +
+                "The MIT License(MIT)\nCopyright (c) Krueger Systems, Inc.\n\n" +
+                "SkiaScene:\n" +
+                "The MIT License(MIT)\nCopyright (c) 2017 OndrejKunc\n\n" +
+                "Xamarin:\n" +
+                "The MIT License(MIT)\nCopyright (c) .NET Foundation Contributors\n\n" +
+                "Zeroconf:\n" +
+                "The MIT License(MIT)\nCopyright (c) [year] [fullname]\n\n";
 
             if (ConnectionClass.connected)
             {
@@ -28,7 +39,7 @@ namespace Pilot
             {
                 ConnectButton.Text = AppResources.Connect;
             }
-            
+
             IP_address_entry.Text = DatabaseClass.GetLastIPAddress();
             Port_entry.Text = DatabaseClass.GetLastPort();
             Password_entry.Text = DatabaseClass.GetLastPassword();
@@ -41,6 +52,7 @@ namespace Pilot
 
         private void ConnectButton_Clicked(object sender, EventArgs e) //próba połączenia z serwerem
         {
+            ConnectionClass.afterAutoreconnect = false;
             if (!ConnectionClass.connected)
             {
                 try

@@ -22,8 +22,8 @@
                     <ColumnDefinition Width="8*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <ScrollView Grid.Row="0" Grid.Column="1">
-                    <StackLayout>
+                <ScrollView Grid.Row="0" Grid.Column="1" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                         <Label Text="{x:Static resources:AppResources.IPAddressConfigPage}" HorizontalTextAlignment="Center" Margin="0,50,0,0"/>
                         <Entry x:Name="IP_address_entry" Text=""/>
                         <Label Text="{x:Static resources:AppResources.PortConfigPage}" HorizontalTextAlignment="Center" Margin="0,0,0,0"/>
@@ -32,6 +32,8 @@
                         <Entry x:Name="Password_entry" Text="" IsVisible="True" IsPassword="True"/>
                         <Button Text="{x:Static resources:AppResources.ConnectConfigPage}" x:Name="ConnectButton" Clicked="ConnectButton_Clicked" />
                         <Button Text="{x:Static resources:AppResources.SearchConfigPage}" x:Name="SearchButton" Clicked="SearchButton_Clicked" />
+                        <Label Text="{x:Static resources:AppResources.ThirdPartyLicenses}" Padding="0,20,0,0" />
+                        <Label x:Name="ThirdPartyLicensesLabel" />
                     </StackLayout>
                 </ScrollView>
             </Grid>
