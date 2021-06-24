@@ -79,7 +79,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\LockScreenWidgetService.cs" />
+    <Compile Include="Services\WidgetService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -215,4 +215,11 @@
     <AndroidResource Include="Resources\drawable\mouseWheelIcon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Target Name="AddCustomAliases" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'Xamarin.Android.Support.Media.Compat' AND '%(ReferencePath.NuGetPackageId)' == 'Xamarin.Android.Support.Media.Compat'">
+        <Aliases>AndroidSupportMedia</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
 </Project>

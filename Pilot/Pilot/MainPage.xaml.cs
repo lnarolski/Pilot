@@ -63,9 +63,14 @@ namespace Pilot
         Stopwatch rightMouseTimer; //timer wykorzystywany do określenia lewego lub prawego przycisku myszy
         Stopwatch doubleTapMouseTimer; //timer wykorzystywany do określenia długiego wciśnięcia lewego przycisku myszy
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
+
+        IWidgetService widgetService;
         public MainPage()
         {
             InitializeComponent();
+
+            widgetService = DependencyService.Get<IWidgetService>();
+            widgetService.CreateWidget();
 
             ConnectionClass.connectedIndicatorImage = this.connectedIndicatorImage;
             ConnectionClass.connectedIndicatorLabel = this.connectedIndicatorLabel;
