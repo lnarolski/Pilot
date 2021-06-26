@@ -295,6 +295,24 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown artist.
+        /// </summary>
+        public static string UnknownArtist {
+            get {
+                return ResourceManager.GetString("UnknownArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown title.
+        /// </summary>
+        public static string UnknownTitle {
+            get {
+                return ResourceManager.GetString("UnknownTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to www.example.com or example.com.
         /// </summary>
         public static string URLExampleShortcutFormPage {

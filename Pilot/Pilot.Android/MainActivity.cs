@@ -24,8 +24,6 @@ namespace Pilot.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
-
-            CreateNotificationFromIntent(Intent);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -35,14 +33,14 @@ namespace Pilot.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        void CreateNotificationFromIntent(Intent intent)
-        {
-            DependencyService.Get<IWidgetService>().CreateWidget();
-        }
+        //void CreateNotificationFromIntent(Intent intent)
+        //{
+        //    DependencyService.Get<IWidgetService>().CreateWidget();
+        //}
 
         protected override void OnNewIntent(Intent intent)
         {
-            DependencyService.Get<IWidgetService>().CreateWidget();
+            System.Collections.Generic.IDictionary<string, string> runtimeStats = Debug.RuntimeStats;
         }
     }
 }

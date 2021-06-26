@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pilot
 {
-    enum Commands //rodzaje komend
+    public enum Commands //rodzaje komend
     {
         SEND_TEXT = 1,
         SEND_BACKSPACE,

@@ -3,6 +3,7 @@
 using Android.App;
 using Android.Content;
 using Android.Graphics;
+using Android.Media;
 using Android.Media.Session;
 using Android.OS;
 using Android.Runtime;
@@ -22,9 +23,12 @@ using AndroidApp = Android.App.Application;
 [assembly: Dependency(typeof(Pilot.Droid.Services.WidgetService))]
 namespace Pilot.Droid.Services
 {
-    class WidgetService : IWidgetService
+    class WidgetService : BroadcastReceiver, IWidgetService
     {
         public Context context;
+        private Intent previousIntent;
+        private Intent playStopIntent;
+        private Intent nextIntent;
         private NotificationManager notificationManager;
 
         const string channelId = "default";
@@ -38,9 +42,11 @@ namespace Pilot.Droid.Services
         private MediaSessionCompat mediaSessionCompat;
         private PlaybackStateCompat playbackStateCompat;
 
+        private IntentFilter intentFilter;
+
         private void CreateMediaSession()
         {
-            mediaSessionCompat = new MediaSessionCompat(context, "MediaSession");
+            mediaSessionCompat = new MediaSessionCompat(context, channelId);
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious).Build();
             mediaSessionCompat.SetMediaButtonReceiver(null);
@@ -57,21 +63,29 @@ namespace Pilot.Droid.Services
 
             context = AndroidApp.Context;
 
+            previousIntent = new Intent("Previous");
+            playStopIntent = new Intent("PlayStop");
+            nextIntent = new Intent("Next");
+
+            intentFilter = new IntentFilter();
+            intentFilter.AddAction("Previous");
+            intentFilter.AddAction("PlayStop");
+            intentFilter.AddAction("Next");
+
+            context.RegisterReceiver(this, intentFilter);
+
             CreateMediaSession();
 
             CreateNotificationChannel();
 
-            NotificationCompat.Action playPauseAction = new NotificationCompat.Action(Resource.Mipmap.icon, "default", MediaButtonReceiver.BuildMediaButtonPendingIntent(context, PlaybackStateCompat.ActionPlayPause));
-
             AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
             builder.SetVisibility(NotificationCompat.VisibilityPublic)
                 .SetSmallIcon(Resource.Mipmap.icon)
-                // Add media control buttons that invoke intents in your media service
-                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", MediaButtonReceiver.BuildMediaButtonPendingIntent(context, PlaybackStateCompat.ActionSkipToPrevious)) // #0
-                .AddAction(Resource.Drawable.ic_play_circle_outline, "Pause", MediaButtonReceiver.BuildMediaButtonPendingIntent(context, PlaybackStateCompat.ActionPlayPause))  // #1
-                .AddAction(Resource.Drawable.ic_skip_next, "Next", MediaButtonReceiver.BuildMediaButtonPendingIntent(context, PlaybackStateCompat.ActionSkipToNext))     // #2
-                .SetContentTitle("Wonderful music")
-                .SetContentText("My Awesome Band")
+                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, 0)) // #0
+                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 1, playStopIntent, 0))  // #1
+                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 1, nextIntent, 0))     // #2
+                .SetContentTitle("Unknown title")
+                .SetContentText("Unknown artist")
                 .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(1 /* #1: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
                 .SetOngoing(true)
                 .SetNotificationSilent()
@@ -103,14 +117,33 @@ namespace Pilot.Droid.Services
             throw new NotImplementedException();
         }
 
-        public void SendCommandToServer()
+        public void SendCommandToServer(Pilot.Commands command)
         {
-            throw new NotImplementedException();
+            if (ConnectionClass.Send(command) == ConnectionState.SEND_NOT_SUCCESS)
+            {
+                //RemoveWidget();
+            }
         }
 
         public void UpdateWidget()
         {
             throw new NotImplementedException();
+        }
+
+        public override void OnReceive(Context context, Intent intent)
+        {
+            if (intent.Action.Equals("Previous"))
+            {
+                SendCommandToServer(Commands.SEND_PREVIOUS);
+            }
+            else if (intent.Action.Equals("PlayStop"))
+            {
+                SendCommandToServer(Commands.SEND_PLAYSTOP);
+            }
+            else if (intent.Action.Equals("Next"))
+            {
+                SendCommandToServer(Commands.SEND_NEXT);
+            }
         }
     }
 }

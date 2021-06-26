@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace Pilot
 {
-    enum ConnectionState //statusy związane z komunikacją
+    public enum ConnectionState //statusy związane z komunikacją
     {
         CONNECTION_ESTABLISHED,
         CONNECTION_NOT_ESTABLISHED,
@@ -20,7 +20,7 @@ namespace Pilot
         SEND_SUCCESS,
         SEND_NOT_SUCCESS,
     }
-    static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
+    public static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
     {
         public static TcpClient tcpClient;
 

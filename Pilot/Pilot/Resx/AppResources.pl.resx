@@ -195,6 +195,12 @@
   <data name="ThirdPartyLicenses" xml:space="preserve">
     <value>Licencje osób trzecich:</value>
   </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Nieznany wykonawca</value>
+  </data>
+  <data name="UnknownTitle" xml:space="preserve">
+    <value>Nieznany tytuł</value>
+  </data>
   <data name="URLExampleShortcutFormPage" xml:space="preserve">
     <value>www.example.com lub example.com</value>
   </data>

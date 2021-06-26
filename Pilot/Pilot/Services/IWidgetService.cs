@@ -9,6 +9,6 @@ namespace Pilot
         void CreateWidget();
         void RemoveWidget();
         void UpdateWidget();
-        void SendCommandToServer();
+        void SendCommandToServer(Commands command);
     }
 }
