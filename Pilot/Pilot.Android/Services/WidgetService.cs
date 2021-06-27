@@ -9,10 +9,13 @@ using Android.OS;
 using Android.Runtime;
 using Android.Service.Media;
 using Android.Support.V4.App;
+using Android.Support.V4.Media;
 using Android.Support.V4.Media.Session;
 using Android.Views;
 using Android.Widget;
 using AndroidX.Media.Session;
+using Java.Interop;
+using Java.Lang;
 using Pilot.Resx;
 using System;
 using System.Collections.Generic;
@@ -26,24 +29,51 @@ namespace Pilot.Droid.Services
 {
     class MediaSessionCompatCallbacks : MediaSessionCompat.Callback
     {
+        private WidgetService widgetService;
+
         public override void OnPlay()
         {
             base.OnPlay();
+
+            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
         }
 
         public override void OnPause()
         {
             base.OnPause();
+
+            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
         }
 
         public override void OnStop()
         {
             base.OnStop();
+
+            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
+        }
+
+        public override void OnSkipToNext()
+        {
+            base.OnSkipToNext();
+
+            widgetService.SendCommandToServer(Commands.SEND_NEXT);
+        }
+
+        public override void OnSkipToPrevious()
+        {
+            base.OnSkipToPrevious();
+
+            widgetService.SendCommandToServer(Commands.SEND_PREVIOUS);
         }
 
         public override bool OnMediaButtonEvent(Intent mediaButtonEvent)
         {
             return base.OnMediaButtonEvent(mediaButtonEvent);
+        }
+
+        public MediaSessionCompatCallbacks(WidgetService widgetService)
+        {
+            this.widgetService = widgetService;
         }
     }
 
@@ -65,25 +95,32 @@ namespace Pilot.Droid.Services
         public const int messageId = 0;
 
         public static bool initialised = false;
-        private MediaSessionCompat mediaSessionCompat;
+        public static MediaSessionCompat mediaSessionCompat;
         private PlaybackStateCompat playbackStateCompat;
 
         private IntentFilter intentFilter;
-        private MediaSessionCompatCallbacks mediaSessionCompatCallback = new MediaSessionCompatCallbacks();
+        private MediaSessionCompatCallbacks mediaSessionCompatCallback;
+
+        MediaPlayer mediaPlayer;
 
         private void CreateMediaSession()
         {
+            mediaSessionCompatCallback = new MediaSessionCompatCallbacks(this);
+
             mediaSessionCompat = new MediaSessionCompat(context, channelId);
 
             Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
             mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, AppResources.UnknownArtist);
             mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
             mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
-            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 1, mediaButtonReceiverIntent, PendingIntentFlags.Immutable));
+            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionStop | PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious)
-                .SetState(PlaybackStateCompat.StatePaused, PlaybackStateCompat.PlaybackPositionUnknown, 0)
+                .SetState(PlaybackStateCompat.StateBuffering, PlaybackStateCompat.PlaybackPositionUnknown, 0)
                 .Build();
+
+            mediaPlayer = MediaPlayer.Create(context, Resource.Raw.silence);
+            mediaPlayer.Start();
 
             mediaSessionCompat.SetPlaybackState(playbackStateCompat);
             mediaSessionCompat.SetCallback(mediaSessionCompatCallback);
@@ -122,11 +159,11 @@ namespace Pilot.Droid.Services
             AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
             builder.SetVisibility(NotificationCompat.VisibilityPublic)
                 .SetSmallIcon(Resource.Mipmap.icon)
-                .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 1, volumeDownIntent, 0)) // #0
-                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, 0)) // #1
-                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 1, playStopIntent, 0))  // #2
-                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 1, nextIntent, 0))     // #3
-                .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 1, volumeUpIntent, 0))     // #4
+                .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
+                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
+                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
+                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
+                .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
                 .SetContentTitle(AppResources.UnknownTitle)
                 .SetContentText(AppResources.UnknownArtist)
                 .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
