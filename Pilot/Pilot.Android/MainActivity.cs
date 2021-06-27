@@ -32,15 +32,5 @@ namespace Pilot.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
-        //void CreateNotificationFromIntent(Intent intent)
-        //{
-        //    DependencyService.Get<IWidgetService>().CreateWidget();
-        //}
-
-        protected override void OnNewIntent(Intent intent)
-        {
-            System.Collections.Generic.IDictionary<string, string> runtimeStats = Debug.RuntimeStats;
-        }
     }
 }
