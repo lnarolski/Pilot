@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -59,17 +60,93 @@ namespace Pilot
         public static bool afterAutoreconnect = false;
         public static bool startApplicationConnectAttempt = true;
 
-        private static async void ReceiveData()
+        private static void ReceiveData()
         {
             readDataStopped = false;
             try
             {
                 while (readData)
                 {
-                    await stream.ReadAsync(readBuffer, 0, readBuffer.Length);
+                    if (stream.DataAvailable)
+                    {
+                        String responseData = String.Empty; //string wykorzystywany do przechowywania odebranych tekstów
+
+                        Int32 bytes = stream.Read(readBuffer, 0, readBuffer.Length); //odczyt danych z bufora
+
+                        Byte[] dataDecoded;
+
+                        AesCryptoServiceProvider _aes;
+                        _aes = new AesCryptoServiceProvider();
+                        _aes.KeySize = 256;
+                        _aes.BlockSize = 128;
+                        _aes.Padding = PaddingMode.Zeros;
+
+                        try
+                        {
+                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            {
+                                using (var MemoryStream = new MemoryStream())
+                                {
+                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
+                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+
+                                    var proc = _aes.CreateDecryptor();
+                                    using (var crypto = new CryptoStream(MemoryStream, proc, CryptoStreamMode.Write))
+                                    {
+                                        crypto.Write(readBuffer, 0, readBuffer.Length);
+                                        crypto.Clear();
+                                        crypto.Close();
+                                    }
+                                    MemoryStream.Close();
+
+                                    dataDecoded = MemoryStream.ToArray();
+                                }
+                            }
+                        }
+                        catch (Exception error)
+                        {
+                            Debug.WriteLine(error.ToString());
+                            continue;
+                        }
+
+                        if (dataDecoded.Length == 0)
+                            continue;
+
+                        CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, 0); //wyodrębnienie odebranej komendy
+                        try
+                        {
+                            switch (commandFromServer)
+                            {
+                                case CommandsFromServer.SEND_PING:
+
+                                    break;
+                                case CommandsFromServer.SEND_PLAYBACK_INFO:
+                                    responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, 4, dataDecoded.Length - 4);
+                                    string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
+                                    if (playbackInfoStringArray.Length == 3)
+                                    {
+                                        bool playing = bool.Parse(playbackInfoStringArray[0]);
+                                        string artist = playbackInfoStringArray[1];
+                                        string title = playbackInfoStringArray[2];
+
+                                        var widgetService = DependencyService.Get<IWidgetService>();
+                                        widgetService.UpdateWidget(artist, title);
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                        }
+                        catch (Exception error)
+                        {
+                            Debug.WriteLine(error.ToString());
+                        } 
+                    }
+                    Thread.Sleep(100);
                 }
             }
-            catch (Exception) { }
+            catch (Exception error) { Debug.WriteLine(error.ToString()); }
             readDataStopped = true;
         }
         public static ConnectionState Connect(string ipAddress, string port, string password) //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
@@ -141,7 +218,7 @@ namespace Pilot
             return buffer;
         }
 
-        public static ConnectionState Send(Commands commands, Byte[] data = null) //wysyłanie polecenia
+        public static ConnectionState Send(CommandsFromClient commands, Byte[] data = null) //wysyłanie polecenia
         {
             if (!startApplicationConnectAttempt && (!afterAutoreconnect && !tcpClient.Connected || !ConnectionClass.connected))
             {

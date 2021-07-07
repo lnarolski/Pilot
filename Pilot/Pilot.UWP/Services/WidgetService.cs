@@ -20,12 +20,12 @@ namespace Pilot.UWP.Services
             
         }
 
-        public void SendCommandToServer()
+        public void SendCommandToServer(CommandsFromClient commandsFromClient)
         {
             
         }
 
-        public void UpdateWidget()
+        public void UpdateWidget(string artist, string title)
         {
             
         }

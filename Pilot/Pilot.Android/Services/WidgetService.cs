@@ -35,35 +35,35 @@ namespace Pilot.Droid.Services
         {
             base.OnPlay();
 
-            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
+            widgetService.SendCommandToServer(CommandsFromClient.SEND_PLAYSTOP);
         }
 
         public override void OnPause()
         {
             base.OnPause();
 
-            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
+            widgetService.SendCommandToServer(CommandsFromClient.SEND_PLAYSTOP);
         }
 
         public override void OnStop()
         {
             base.OnStop();
 
-            widgetService.SendCommandToServer(Commands.SEND_PLAYSTOP);
+            widgetService.SendCommandToServer(CommandsFromClient.SEND_PLAYSTOP);
         }
 
         public override void OnSkipToNext()
         {
             base.OnSkipToNext();
 
-            widgetService.SendCommandToServer(Commands.SEND_NEXT);
+            widgetService.SendCommandToServer(CommandsFromClient.SEND_NEXT);
         }
 
         public override void OnSkipToPrevious()
         {
             base.OnSkipToPrevious();
 
-            widgetService.SendCommandToServer(Commands.SEND_PREVIOUS);
+            widgetService.SendCommandToServer(CommandsFromClient.SEND_PREVIOUS);
         }
 
         public override bool OnMediaButtonEvent(Intent mediaButtonEvent)
@@ -102,6 +102,7 @@ namespace Pilot.Droid.Services
         private MediaSessionCompatCallbacks mediaSessionCompatCallback;
 
         MediaPlayer mediaPlayer;
+        private Notification notification;
 
         private void CreateMediaSession()
         {
@@ -171,7 +172,7 @@ namespace Pilot.Droid.Services
                 .SetNotificationSilent()
                 .SetVibrate(new long[] { 0L });
 
-            Notification notification = builder.Build();
+            notification = builder.Build();
             notificationManager.Notify(messageId, notification);
 
             initialised = true;
@@ -197,7 +198,7 @@ namespace Pilot.Droid.Services
             throw new NotImplementedException();
         }
 
-        public void SendCommandToServer(Pilot.Commands command)
+        public void SendCommandToServer(Pilot.CommandsFromClient command)
         {
             if (ConnectionClass.Send(command) == ConnectionState.SEND_NOT_SUCCESS)
             {
@@ -205,32 +206,40 @@ namespace Pilot.Droid.Services
             }
         }
 
-        public void UpdateWidget()
+        public void UpdateWidget(string artist, string title)
         {
-            throw new NotImplementedException();
+            if (mediaSessionCompat != null)
+            {
+                Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
+                mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, artist);
+                mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, title);
+                mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
+
+                notificationManager.Notify(messageId, notification);
+            }
         }
 
         public override void OnReceive(Context context, Intent intent)
         {
             if (intent.Action.Equals("Previous"))
             {
-                SendCommandToServer(Commands.SEND_PREVIOUS);
+                SendCommandToServer(CommandsFromClient.SEND_PREVIOUS);
             }
             else if (intent.Action.Equals("PlayStop"))
             {
-                SendCommandToServer(Commands.SEND_PLAYSTOP);
+                SendCommandToServer(CommandsFromClient.SEND_PLAYSTOP);
             }
             else if (intent.Action.Equals("Next"))
             {
-                SendCommandToServer(Commands.SEND_NEXT);
+                SendCommandToServer(CommandsFromClient.SEND_NEXT);
             }
             else if (intent.Action.Equals("VolumeUp"))
             {
-                SendCommandToServer(Commands.SEND_VOLUP);
+                SendCommandToServer(CommandsFromClient.SEND_VOLUP);
             }
             else if (intent.Action.Equals("VolumeDown"))
             {
-                SendCommandToServer(Commands.SEND_VOLDOWN);
+                SendCommandToServer(CommandsFromClient.SEND_VOLDOWN);
             }
             else if (intent.Action.Equals(Intent.ActionMediaButton))
             {

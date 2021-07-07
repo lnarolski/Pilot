@@ -109,7 +109,7 @@ namespace Pilot
             dragFinished = true;
             mouseWheelSlider.Value = 0;
             Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
-            ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
+            ConnectionClass.Send(CommandsFromClient.SEND_WHEEL_MOUSE, sliderValue);
         }
 
         private async void MouseWheelSlider_DragStarted(object sender, EventArgs e)
@@ -120,7 +120,7 @@ namespace Pilot
                 do
                 {
                     Byte[] sliderValue = BitConverter.GetBytes((Int32)mouseWheelSlider.Value);
-                    ConnectionClass.Send(Commands.SEND_WHEEL_MOUSE, sliderValue);
+                    ConnectionClass.Send(CommandsFromClient.SEND_WHEEL_MOUSE, sliderValue);
 
                     Thread.Sleep(100);
                 } while (!dragFinished);
@@ -163,12 +163,12 @@ namespace Pilot
             ConnectionState sendStatus;
             if (keyboardRead.Text.Length == 0) //w przypadku usunięcia znaku wysłanie klawisza BACKSPACE
             {
-                sendStatus = ConnectionClass.Send(Commands.SEND_BACKSPACE);
+                sendStatus = ConnectionClass.Send(CommandsFromClient.SEND_BACKSPACE);
             }
             else //wysłanie tekstu
             {
                 text = System.Text.Encoding.UTF8.GetBytes(keyboardRead.Text.Substring(1));
-                sendStatus = ConnectionClass.Send(Commands.SEND_TEXT, text);
+                sendStatus = ConnectionClass.Send(CommandsFromClient.SEND_TEXT, text);
             }
 
             switch (sendStatus)
@@ -198,7 +198,7 @@ namespace Pilot
                         doubleTapMouseTimer.Stop();
 
                         doubleTapStarted = true;
-                        ConnectionClass.Send(Commands.SEND_LEFT_MOUSE_LONG_PRESS_START);
+                        ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_START);
                     }
                     else
                     {
@@ -234,7 +234,7 @@ namespace Pilot
                             Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
                             Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
                             Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
-                            ConnectionClass.Send(Commands.SEND_MOVE_MOUSE, data);
+                            ConnectionClass.Send(CommandsFromClient.SEND_MOVE_MOUSE, data);
                         }
                     }
                     break;
@@ -244,14 +244,14 @@ namespace Pilot
                     rightMouseTimer.Stop();
                     if (doubleTapStarted)
                     {
-                        ConnectionClass.Send(Commands.SEND_LEFT_MOUSE_LONG_PRESS_STOP);
+                        ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_STOP);
                         doubleTapStarted = false;
                     }
                     else if (touchPressed && !touchMoved)
                         if (rightMouseTimer.ElapsedMilliseconds > 800)
-                            ConnectionClass.Send(Commands.SEND_RIGHT_MOUSE);
+                            ConnectionClass.Send(CommandsFromClient.SEND_RIGHT_MOUSE);
                         else
-                            ConnectionClass.Send(Commands.SEND_LEFT_MOUSE);
+                            ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE);
                     rightMouseTimer.Reset();
                     break;
                 case TouchTracking.TouchActionType.Cancelled:
