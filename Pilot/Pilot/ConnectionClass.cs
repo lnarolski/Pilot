@@ -69,11 +69,9 @@ namespace Pilot
                 {
                     if (stream.DataAvailable)
                     {
-                        String responseData = String.Empty; //string wykorzystywany do przechowywania odebranych tekstów
-
                         Int32 bytes = stream.Read(readBuffer, 0, readBuffer.Length); //odczyt danych z bufora
 
-                        Byte[] dataDecoded;
+                        Byte[] dataDecoded = null;
 
                         AesCryptoServiceProvider _aes;
                         _aes = new AesCryptoServiceProvider();
@@ -112,35 +110,49 @@ namespace Pilot
                         if (dataDecoded.Length == 0)
                             continue;
 
-                        CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, 0); //wyodrębnienie odebranej komendy
-                        try
+                        for (int dataDecodedPosition = 0; dataDecodedPosition < dataDecoded.Length - sizeof(int);)
                         {
-                            switch (commandFromServer)
+                            CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie odebranej komendy
+                            try
                             {
-                                case CommandsFromServer.SEND_PING:
+                                switch (commandFromServer)
+                                {
+                                    case CommandsFromServer.SEND_PING:
+                                        dataDecodedPosition += sizeof(int);
+                                        break;
+                                    case CommandsFromServer.SEND_PLAYBACK_INFO:
+                                        dataDecodedPosition += sizeof(int);
+                                        if (!(dataDecodedPosition < dataDecoded.Length - sizeof(int)))
+                                            break;
+                                        int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
+                                        if (!(dataDecodedPosition < dataDecoded.Length - (playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount("A"))))
+                                        {
+                                            dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount("A");
+                                            break;
+                                        }
+                                        dataDecodedPosition += sizeof(int);
+                                        string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
+                                        string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
+                                        if (playbackInfoStringArray.Length == 3)
+                                        {
+                                            bool playing = bool.Parse(playbackInfoStringArray[0]);
+                                            string artist = playbackInfoStringArray[1];
+                                            string title = playbackInfoStringArray[2];
 
-                                    break;
-                                case CommandsFromServer.SEND_PLAYBACK_INFO:
-                                    responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, 4, dataDecoded.Length - 4);
-                                    string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
-                                    if (playbackInfoStringArray.Length == 3)
-                                    {
-                                        bool playing = bool.Parse(playbackInfoStringArray[0]);
-                                        string artist = playbackInfoStringArray[1];
-                                        string title = playbackInfoStringArray[2];
-
-                                        var widgetService = DependencyService.Get<IWidgetService>();
-                                        widgetService.UpdateWidget(artist, title);
-                                    }
-                                    break;
-                                default:
-
-                                    break;
+                                            var widgetService = DependencyService.Get<IWidgetService>();
+                                            widgetService.UpdateWidget(artist, title);
+                                        }
+                                        dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount(responseData);
+                                        break;
+                                    default:
+                                        dataDecodedPosition += sizeof(int);
+                                        break;
+                                }
                             }
-                        }
-                        catch (Exception error)
-                        {
-                            Debug.WriteLine(error.ToString());
+                            catch (Exception error)
+                            {
+                                Debug.WriteLine(error.ToString());
+                            }
                         } 
                     }
                     Thread.Sleep(100);
@@ -154,13 +166,12 @@ namespace Pilot
             try
             {
                 tcpClient = new TcpClient();
-                tcpClient.ReceiveTimeout = 5000;
-                tcpClient.SendTimeout = 5000;
+                //tcpClient.ReceiveTimeout = 5000;
+                //tcpClient.SendTimeout = 5000;
                 tcpClient.Connect(ipAddress, int.Parse(port));
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
-                stream.ReadTimeout = 500;
-                stream.WriteTimeout = 500;
+                stream.WriteTimeout = 1000;
                 ConnectionClass.ipAddress = ipAddress;
                 ConnectionClass.port = short.Parse(port);
                 ConnectionClass.password = password;
