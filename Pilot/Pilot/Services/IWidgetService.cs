@@ -8,7 +8,7 @@ namespace Pilot
     {
         void CreateWidget();
         void RemoveWidget();
-        void UpdateWidget(string artist, string title);
+        void UpdateWidget(string artist, string title, byte[] thumbnail);
         void SendCommandToServer(CommandsFromClient command);
     }
 }

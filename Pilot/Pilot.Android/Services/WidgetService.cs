@@ -19,6 +19,7 @@ using Java.Lang;
 using Pilot.Resx;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Xamarin.Forms;
@@ -88,20 +89,18 @@ namespace Pilot.Droid.Services
         private Intent mediaButtonReceiverIntent;
         private NotificationManager notificationManager;
 
-        const string channelId = "default";
+        private const string channelId = "default";
 
-        public const string TitleKey = "title";
-        public const string MessageKey = "message";
-        public const int messageId = 0;
+        private const int messageId = 0;
 
-        public static bool initialised = false;
-        public static MediaSessionCompat mediaSessionCompat;
+        private static bool initialised = false;
+        private static MediaSessionCompat mediaSessionCompat;
         private PlaybackStateCompat playbackStateCompat;
 
         private IntentFilter intentFilter;
         private MediaSessionCompatCallbacks mediaSessionCompatCallback;
 
-        MediaPlayer mediaPlayer;
+        private MediaPlayer mediaPlayer;
         private Notification notification;
 
         private void CreateMediaSession()
@@ -204,7 +203,7 @@ namespace Pilot.Droid.Services
             ConnectionClass.Send(command);
         }
 
-        public void UpdateWidget(string artist, string title)
+        public void UpdateWidget(string artist, string title, byte[] thumbnail)
         {
             if (notification != null)
             {
@@ -230,6 +229,12 @@ namespace Pilot.Droid.Services
                     builder.SetContentText(AppResources.UnknownTitle);
                 else
                     builder.SetContentText(title);
+
+                if (thumbnail != null)
+                {
+                    Bitmap bitmap = BitmapFactory.DecodeByteArray(thumbnail, 0, thumbnail.Length);
+                    builder.SetLargeIcon(bitmap);
+                }
 
                 notification = builder.Build();
                 notificationManager.Notify(messageId, notification);
@@ -257,10 +262,6 @@ namespace Pilot.Droid.Services
             else if (intent.Action.Equals("VolumeDown"))
             {
                 SendCommandToServer(CommandsFromClient.SEND_VOLDOWN);
-            }
-            else if (intent.Action.Equals(Intent.ActionMediaButton))
-            {
-                Bundle extras = intent.Extras;
             }
         }
     }

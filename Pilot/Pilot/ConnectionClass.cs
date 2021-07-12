@@ -55,7 +55,7 @@ namespace Pilot
         public static NetworkStream stream;
         public static short port;
         public static string password = "";
-        private static byte[] readBuffer = new byte[4096];
+        private static byte[] readBuffer = new byte[1048576]; // 1024 KB
 
         public static bool afterAutoreconnect = false;
         public static bool startApplicationConnectAttempt = true;
@@ -122,26 +122,39 @@ namespace Pilot
                                         dataDecodedPosition += sizeof(int);
                                         break;
                                     case CommandsFromServer.SEND_PLAYBACK_INFO:
-                                        dataDecodedPosition += sizeof(int);
-                                        if (!(dataDecodedPosition < dataDecoded.Length - sizeof(int)))
-                                            break;
-                                        int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
-                                        if (!(dataDecodedPosition < dataDecoded.Length - (playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount("A"))))
+                                        if (dataDecoded.Length < (3 * sizeof(int)))
                                         {
-                                            dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount("A");
+                                            dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
+                                            break;
+                                        }
+                                        dataDecodedPosition += sizeof(int);
+                                        int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
+                                        dataDecodedPosition += sizeof(int);
+                                        int playbackInfoThumbnailLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego thumbnail'a
+                                        if (dataDecoded.Length < (3 * sizeof(int) + playbackInfoStringLength + playbackInfoThumbnailLength))
+                                        {
+                                            dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
                                             break;
                                         }
                                         dataDecodedPosition += sizeof(int);
                                         string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
                                         string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
+                                        dataDecodedPosition += playbackInfoStringLength;
                                         if (playbackInfoStringArray.Length == 3)
                                         {
                                             bool playing = bool.Parse(playbackInfoStringArray[0]);
                                             string artist = playbackInfoStringArray[1];
                                             string title = playbackInfoStringArray[2];
 
+                                            byte[] thumbnail = null;
+                                            if (playbackInfoThumbnailLength != 0)
+                                            {
+                                                thumbnail = new byte[playbackInfoThumbnailLength];
+                                                Buffer.BlockCopy(dataDecoded, dataDecodedPosition, thumbnail, 0, playbackInfoThumbnailLength);
+                                            }
+
                                             var widgetService = DependencyService.Get<IWidgetService>();
-                                            widgetService.UpdateWidget(artist, title);
+                                            widgetService.UpdateWidget(artist, title, thumbnail);
                                         }
                                         dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount(responseData);
                                         break;
