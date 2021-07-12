@@ -111,10 +111,8 @@ namespace Pilot.Droid.Services
             mediaSessionCompat = new MediaSessionCompat(context, channelId);
 
             Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
-            mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, AppResources.UnknownArtist);
-            mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
-            mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
             mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
+            mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionStop | PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious)
                 .SetState(PlaybackStateCompat.StateBuffering, PlaybackStateCompat.PlaybackPositionUnknown, 0)
@@ -131,31 +129,33 @@ namespace Pilot.Droid.Services
 
         public void CreateWidget()
         {
-            if (initialised)
-                return;
+            if (!initialised)
+            {
+                context = AndroidApp.Context;
 
-            context = AndroidApp.Context;
+                previousIntent = new Intent("Previous");
+                playStopIntent = new Intent("PlayStop");
+                nextIntent = new Intent("Next");
+                volumeUpIntent = new Intent("VolumeUp");
+                volumeDownIntent = new Intent("VolumeDown");
+                mediaButtonReceiverIntent = new Intent(Intent.ActionMediaButton);
 
-            previousIntent = new Intent("Previous");
-            playStopIntent = new Intent("PlayStop");
-            nextIntent = new Intent("Next");
-            volumeUpIntent = new Intent("VolumeUp");
-            volumeDownIntent = new Intent("VolumeDown");
-            mediaButtonReceiverIntent = new Intent(Intent.ActionMediaButton);
+                intentFilter = new IntentFilter();
+                intentFilter.AddAction("Previous");
+                intentFilter.AddAction("PlayStop");
+                intentFilter.AddAction("Next");
+                intentFilter.AddAction("VolumeUp");
+                intentFilter.AddAction("VolumeDown");
+                intentFilter.AddAction(Intent.ActionMediaButton);
 
-            intentFilter = new IntentFilter();
-            intentFilter.AddAction("Previous");
-            intentFilter.AddAction("PlayStop");
-            intentFilter.AddAction("Next");
-            intentFilter.AddAction("VolumeUp");
-            intentFilter.AddAction("VolumeDown");
-            intentFilter.AddAction(Intent.ActionMediaButton);
+                context.RegisterReceiver(this, intentFilter);
 
-            context.RegisterReceiver(this, intentFilter);
+                CreateMediaSession();
 
-            CreateMediaSession();
+                CreateNotificationChannel();
 
-            CreateNotificationChannel();
+                initialised = true;
+            }
 
             AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
             builder.SetVisibility(NotificationCompat.VisibilityPublic)
@@ -174,8 +174,6 @@ namespace Pilot.Droid.Services
 
             notification = builder.Build();
             notificationManager.Notify(messageId, notification);
-
-            initialised = true;
         }
 
         private void CreateNotificationChannel()
@@ -195,26 +193,45 @@ namespace Pilot.Droid.Services
 
         public void RemoveWidget()
         {
-            throw new NotImplementedException();
+            if (notificationManager != null)
+            {
+                notificationManager.CancelAll();
+            }
         }
 
         public void SendCommandToServer(Pilot.CommandsFromClient command)
         {
-            if (ConnectionClass.Send(command) == ConnectionState.SEND_NOT_SUCCESS)
-            {
-                //RemoveWidget();
-            }
+            ConnectionClass.Send(command);
         }
 
         public void UpdateWidget(string artist, string title)
         {
-            if (mediaSessionCompat != null)
+            if (notification != null)
             {
-                Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
-                mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, artist);
-                mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, title);
-                mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
+                AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
+                builder.SetVisibility(NotificationCompat.VisibilityPublic)
+                    .SetSmallIcon(Resource.Mipmap.icon)
+                    .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
+                    .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
+                    .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
+                    .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
+                    .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
+                    .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
+                    .SetOngoing(true)
+                    .SetNotificationSilent()
+                    .SetVibrate(new long[] { 0L });
 
+                if (artist == "")
+                    builder.SetContentTitle(AppResources.UnknownArtist);
+                else
+                    builder.SetContentTitle(artist);
+
+                if (title == "")
+                    builder.SetContentText(AppResources.UnknownTitle);
+                else
+                    builder.SetContentText(title);
+
+                notification = builder.Build();
                 notificationManager.Notify(messageId, notification);
             }
         }

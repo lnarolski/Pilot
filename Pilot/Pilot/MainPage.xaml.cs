@@ -69,9 +69,6 @@ namespace Pilot
         {
             InitializeComponent();
 
-            widgetService = DependencyService.Get<IWidgetService>();
-            widgetService.CreateWidget();
-
             ConnectionClass.connectedIndicatorImage = this.connectedIndicatorImage;
             ConnectionClass.connectedIndicatorLabel = this.connectedIndicatorLabel;
 

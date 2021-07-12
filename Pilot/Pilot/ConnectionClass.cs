@@ -59,6 +59,7 @@ namespace Pilot
 
         public static bool afterAutoreconnect = false;
         public static bool startApplicationConnectAttempt = true;
+        private static IWidgetService widgetService;
 
         private static void ReceiveData()
         {
@@ -184,6 +185,10 @@ namespace Pilot
 
                 startApplicationConnectAttempt = false;
 
+                if (widgetService == null)
+                    widgetService = DependencyService.Get<IWidgetService>();
+                widgetService.CreateWidget();
+
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
             catch (Exception error)
@@ -200,6 +205,9 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             try
             {
+                if (widgetService != null)
+                    widgetService.RemoveWidget();
+
                 stream.Close();
                 tcpClient.Close();
 
@@ -344,5 +352,4 @@ namespace Pilot
                 return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
-    };
-}
+    }}
