@@ -110,8 +110,8 @@ namespace Pilot.Droid.Services
             mediaSessionCompat = new MediaSessionCompat(context, channelId);
 
             Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
-            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
             mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
+            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionStop | PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious)
                 .SetState(PlaybackStateCompat.StateBuffering, PlaybackStateCompat.PlaybackPositionUnknown, 0)
@@ -181,9 +181,9 @@ namespace Pilot.Droid.Services
 
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
-                string description = "Pilot WidgetService notification channel";
                 NotificationChannel channel = new NotificationChannel(channelId, "pilotChannelCharSequence", NotificationImportance.Default);
-                channel.Description = description;
+                channel.Description = AppResources.NotificationDescription;
+                channel.LockscreenVisibility = NotificationVisibility.Public;
                 // Register the channel with the system; you can't change the importance
                 // or other notification behaviors after this
                 notificationManager.CreateNotificationChannel(channel);

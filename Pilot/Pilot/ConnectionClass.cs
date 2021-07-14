@@ -167,11 +167,12 @@ namespace Pilot
                             {
                                 Debug.WriteLine(error.ToString());
                             }
-                        } 
+                        }
                     }
                     Thread.Sleep(100);
                 }
             }
+            catch (ObjectDisposedException error) { }
             catch (Exception error) { Debug.WriteLine(error.ToString()); }
             readDataStopped = true;
         }
@@ -180,12 +181,13 @@ namespace Pilot
             try
             {
                 tcpClient = new TcpClient();
-                //tcpClient.ReceiveTimeout = 5000;
-                //tcpClient.SendTimeout = 5000;
+                tcpClient.ReceiveTimeout = 5000;
+                tcpClient.SendTimeout = 5000;
                 tcpClient.Connect(ipAddress, int.Parse(port));
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
-                stream.WriteTimeout = 1000;
+                stream.WriteTimeout = 500;
+                stream.ReadTimeout = 500;
                 ConnectionClass.ipAddress = ipAddress;
                 ConnectionClass.port = short.Parse(port);
                 ConnectionClass.password = password;

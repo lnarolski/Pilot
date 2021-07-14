@@ -168,6 +168,9 @@
   <data name="NotFoundSearchPage" xml:space="preserve">
     <value>Servers not found</value>
   </data>
+  <data name="NotificationDescription" xml:space="preserve">
+    <value>Application playback control notification</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
