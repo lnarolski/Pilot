@@ -1,6 +1,4 @@
-﻿//extern alias AndroidSupportMedia; // Because "The type 'MediaSessionCompat' exists in both 'Xamarin.Android.Support.Media.Compat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' and 'Xamarin.AndroidX.Media, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'"
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Media;
@@ -89,7 +87,7 @@ namespace Pilot.Droid.Services
         private Intent mediaButtonReceiverIntent;
         private NotificationManager notificationManager;
 
-        private const string channelId = "default";
+        private const string channelId = "pilotNotificationChannelId";
 
         private const int messageId = 0;
 
@@ -183,7 +181,6 @@ namespace Pilot.Droid.Services
             {
                 NotificationChannel channel = new NotificationChannel(channelId, "pilotChannelCharSequence", NotificationImportance.Default);
                 channel.Description = AppResources.NotificationDescription;
-                channel.LockscreenVisibility = NotificationVisibility.Public;
                 // Register the channel with the system; you can't change the importance
                 // or other notification behaviors after this
                 notificationManager.CreateNotificationChannel(channel);

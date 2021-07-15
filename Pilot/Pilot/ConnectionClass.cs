@@ -21,6 +21,7 @@ namespace Pilot
         SEND_SUCCESS,
         SEND_NOT_SUCCESS,
     }
+
     public static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
     {
         public static TcpClient tcpClient;
