@@ -51,7 +51,7 @@
             <Image Source="mouseWheelIcon.png" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Opacity="0.5" Grid.Row="2"/>
         </Grid>
         <Button Text="{x:Static resources:AppResources.Shortcuts}" Pressed="Button_Shortcuts" Grid.Row="2" Grid.Column="0" />
-        <Button Text="{x:Static resources:AppResources.KeyboardMainPage}" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
+        <Button Text="{x:Static resources:AppResources.KeyboardMainPage}" x:Name="showKeyboardButton" Pressed="Show_keyboard" Grid.Row="2" Grid.Column="1" />
         <Button Text="⚙" Pressed="Button_Config" FontSize="25" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" />
     </Grid>
 

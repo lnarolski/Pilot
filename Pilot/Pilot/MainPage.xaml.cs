@@ -69,6 +69,11 @@ namespace Pilot
         {
             InitializeComponent();
 
+            if (Device.RuntimePlatform == Device.UWP)
+            {
+                showKeyboardButton.IsEnabled = false; //funkcja otwierania klawiatury ekranowej nie jest jeszcze wspierana przez API Windowsa
+            }
+
             ConnectionClass.connectedIndicatorImage = this.connectedIndicatorImage;
             ConnectionClass.connectedIndicatorLabel = this.connectedIndicatorLabel;
 

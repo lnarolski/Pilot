@@ -25,9 +25,9 @@ namespace Pilot.UWP.Services
             
         }
 
-        public void UpdateWidget(string artist, string title)
+        public void UpdateWidget(string artist, string title, byte[] thumbnail)
         {
-            
+
         }
     }
 }
