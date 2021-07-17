@@ -29,9 +29,10 @@ namespace Pilot
         public static Image connectedIndicatorImage;
         public static Label connectedIndicatorLabel;
         private static bool connectedValue;
-        public static bool connected {
+        public static bool connected
+        {
             get { return connectedValue; }
-            set 
+            set
             {
                 if (connectedIndicatorImage != null)
                     Device.BeginInvokeOnMainThread(() =>
@@ -60,7 +61,9 @@ namespace Pilot
 
         public static bool afterAutoreconnect = false;
         public static bool startApplicationConnectAttempt = true;
+        private static AesCryptoServiceProvider _aes;
         private static IWidgetService widgetService;
+        private static PasswordDeriveBytes pass;
 
         private static void ReceiveData()
         {
@@ -201,6 +204,14 @@ namespace Pilot
 
                 startApplicationConnectAttempt = false;
 
+                _aes = new AesCryptoServiceProvider();
+                _aes.KeySize = 256;
+                _aes.BlockSize = 128;
+                _aes.Padding = PaddingMode.Zeros;
+                pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password));
+                _aes.Key = pass.GetBytes(_aes.KeySize / 8);
+                _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+
                 if (widgetService == null)
                     widgetService = DependencyService.Get<IWidgetService>();
                 widgetService.CreateWidget();
@@ -229,6 +240,9 @@ namespace Pilot
 
                 stream.Dispose();
                 tcpClient.Dispose();
+
+                if (pass != null)
+                    pass.Dispose();
 
                 connected = false;
                 readData = false;
@@ -279,37 +293,28 @@ namespace Pilot
                     Byte[] dataToSendEncoded;
                     command = BitConverter.GetBytes((int)commands);
 
-                    AesCryptoServiceProvider _aes;
-                    _aes = new AesCryptoServiceProvider();
-                    _aes.KeySize = 256;
-                    _aes.BlockSize = 128;
-                    _aes.Padding = PaddingMode.Zeros;
-
                     if (data == null)
                     {
-                        dataToSend = new Byte[command.Length];
-                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                        dataToSend = new Byte[sizeof(int) + command.Length];
+                        Buffer.BlockCopy(BitConverter.GetBytes((int)command.Length), 0, dataToSend, 0, sizeof(int));
+                        Buffer.BlockCopy(command, 0, dataToSend, sizeof(int), command.Length);
+                        Debug.WriteLine("Message size: " + command.Length);
+                        Debug.WriteLine("Message: " + String.Join(" ", dataToSend));
 
                         try
                         {
-                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            using (var stream = new MemoryStream())
                             {
-                                using (var stream = new MemoryStream())
+                                var proc = _aes.CreateEncryptor();
+                                using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
                                 {
-                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
-                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
-
-                                    var proc = _aes.CreateEncryptor();
-                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
-                                    {
-                                        crypto.Write(dataToSend, 0, dataToSend.Length);
-                                        crypto.Clear();
-                                        crypto.Close();
-                                    }
-                                    stream.Close();
-
-                                    dataToSendEncoded = stream.ToArray();
+                                    crypto.Write(dataToSend, 0, dataToSend.Length);
+                                    crypto.Clear();
+                                    crypto.Close();
                                 }
+                                stream.Close();
+
+                                dataToSendEncoded = stream.ToArray();
                             }
                         }
                         catch (Exception error)
@@ -320,30 +325,28 @@ namespace Pilot
                     }
                     else
                     {
-                        dataToSend = new Byte[command.Length + data.Length];
-                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
-                        Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
+                        dataToSend = new Byte[sizeof(int) + command.Length + data.Length];
+                        int messageSize = (int)(command.Length + data.Length);
+                        Debug.WriteLine("Message size: " + messageSize);
+                        Buffer.BlockCopy(BitConverter.GetBytes(messageSize), 0, dataToSend, 0, sizeof(int));
+                        Buffer.BlockCopy(command, 0, dataToSend, sizeof(int), command.Length);
+                        Buffer.BlockCopy(data, 0, dataToSend, sizeof(int) + command.Length, data.Length);
+                        Debug.WriteLine("Message: " + String.Join(" ", dataToSend));
 
                         try
                         {
-                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            using (var stream = new MemoryStream())
                             {
-                                using (var stream = new MemoryStream())
+                                var proc = _aes.CreateEncryptor();
+                                using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
                                 {
-                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
-                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
-
-                                    var proc = _aes.CreateEncryptor();
-                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
-                                    {
-                                        crypto.Write(dataToSend, 0, dataToSend.Length);
-                                        crypto.Clear();
-                                        crypto.Close();
-                                    }
-                                    stream.Close();
-
-                                    dataToSendEncoded = stream.ToArray();
+                                    crypto.Write(dataToSend, 0, dataToSend.Length);
+                                    crypto.Clear();
+                                    crypto.Close();
                                 }
+                                stream.Close();
+
+                                dataToSendEncoded = stream.ToArray();
                             }
                         }
                         catch (Exception error)
@@ -353,6 +356,7 @@ namespace Pilot
                         }
                     }
 
+                    Debug.WriteLine("Encoded message: " + String.Join(" ", dataToSendEncoded));
                     ConnectionClass.stream.Write(dataToSendEncoded, 0, dataToSendEncoded.Length);
                     return ConnectionState.SEND_SUCCESS;
                 }
@@ -368,4 +372,5 @@ namespace Pilot
                 return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
-    }}
+    }
+}
