@@ -78,22 +78,22 @@ namespace Pilot
 
                         Byte[] dataDecoded = null;
 
-                        AesCryptoServiceProvider _aes;
-                        _aes = new AesCryptoServiceProvider();
-                        _aes.KeySize = 256;
-                        _aes.BlockSize = 128;
-                        _aes.Padding = PaddingMode.Zeros;
+                        AesCryptoServiceProvider _aesFromServer;
+                        _aesFromServer = new AesCryptoServiceProvider();
+                        _aesFromServer.KeySize = 256;
+                        _aesFromServer.BlockSize = 128;
+                        _aesFromServer.Padding = PaddingMode.Zeros;
 
                         try
                         {
-                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            using (var passFromServer = new PasswordDeriveBytes(password, GenerateSalt(_aesFromServer.BlockSize / 8, password)))
                             {
                                 using (var MemoryStream = new MemoryStream())
                                 {
-                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
-                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+                                    _aesFromServer.Key = passFromServer.GetBytes(_aesFromServer.KeySize / 8);
+                                    _aesFromServer.IV = passFromServer.GetBytes(_aesFromServer.BlockSize / 8);
 
-                                    var proc = _aes.CreateDecryptor();
+                                    var proc = _aesFromServer.CreateDecryptor();
                                     using (var crypto = new CryptoStream(MemoryStream, proc, CryptoStreamMode.Write))
                                     {
                                         crypto.Write(readBuffer, 0, readBuffer.Length);
