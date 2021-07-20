@@ -76,102 +76,115 @@ namespace Pilot
                     {
                         Int32 bytes = stream.Read(readBuffer, 0, readBuffer.Length); //odczyt danych z bufora
 
-                        Byte[] dataDecoded = null;
-
-                        AesCryptoServiceProvider _aesFromServer;
-                        _aesFromServer = new AesCryptoServiceProvider();
-                        _aesFromServer.KeySize = 256;
-                        _aesFromServer.BlockSize = 128;
-                        _aesFromServer.Padding = PaddingMode.Zeros;
-
-                        try
+                        for (int position = 0; position < bytes - sizeof(int);)
                         {
-                            using (var passFromServer = new PasswordDeriveBytes(password, GenerateSalt(_aesFromServer.BlockSize / 8, password)))
-                            {
-                                using (var MemoryStream = new MemoryStream())
-                                {
-                                    _aesFromServer.Key = passFromServer.GetBytes(_aesFromServer.KeySize / 8);
-                                    _aesFromServer.IV = passFromServer.GetBytes(_aesFromServer.BlockSize / 8);
+                            int messageLength = BitConverter.ToInt32(readBuffer, position);
+                            position += sizeof(int);
 
-                                    var proc = _aesFromServer.CreateDecryptor();
-                                    using (var crypto = new CryptoStream(MemoryStream, proc, CryptoStreamMode.Write))
-                                    {
-                                        crypto.Write(readBuffer, 0, readBuffer.Length);
-                                        crypto.Clear();
-                                        crypto.Close();
-                                    }
-                                    MemoryStream.Close();
+                            if (position + messageLength > bytes)
+                                break; //odebrano niekompletną wiadomość
 
-                                    dataDecoded = MemoryStream.ToArray();
-                                }
-                            }
-                        }
-                        catch (Exception error)
-                        {
-                            Debug.WriteLine(error.ToString());
-                            continue;
-                        }
+                            byte[] data = new byte[messageLength];
+                            byte[] dataDecoded = null;
 
-                        if (dataDecoded.Length == 0)
-                            continue;
+                            Buffer.BlockCopy(readBuffer, position, data, 0, messageLength);
+                            position += messageLength;
 
-                        for (int dataDecodedPosition = 0; dataDecodedPosition < dataDecoded.Length - sizeof(int);)
-                        {
-                            CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie odebranej komendy
+                            AesCryptoServiceProvider _aesFromServer;
+                            _aesFromServer = new AesCryptoServiceProvider();
+                            _aesFromServer.KeySize = 256;
+                            _aesFromServer.BlockSize = 128;
+                            _aesFromServer.Padding = PaddingMode.Zeros;
+
                             try
                             {
-                                switch (commandFromServer)
+                                using (var passFromServer = new PasswordDeriveBytes(password, GenerateSalt(_aesFromServer.BlockSize / 8, password)))
                                 {
-                                    case CommandsFromServer.SEND_PING:
-                                        dataDecodedPosition += sizeof(int);
-                                        break;
-                                    case CommandsFromServer.SEND_PLAYBACK_INFO:
-                                        if (dataDecoded.Length < (3 * sizeof(int)))
-                                        {
-                                            dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
-                                            break;
-                                        }
-                                        dataDecodedPosition += sizeof(int);
-                                        int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
-                                        dataDecodedPosition += sizeof(int);
-                                        int playbackInfoThumbnailLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego thumbnail'a
-                                        if (dataDecoded.Length < (3 * sizeof(int) + playbackInfoStringLength + playbackInfoThumbnailLength))
-                                        {
-                                            dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
-                                            break;
-                                        }
-                                        dataDecodedPosition += sizeof(int);
-                                        string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
-                                        string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
-                                        dataDecodedPosition += playbackInfoStringLength;
-                                        if (playbackInfoStringArray.Length == 3)
-                                        {
-                                            bool playing = bool.Parse(playbackInfoStringArray[0]);
-                                            string artist = playbackInfoStringArray[1];
-                                            string title = playbackInfoStringArray[2];
+                                    using (var MemoryStream = new MemoryStream())
+                                    {
+                                        _aesFromServer.Key = passFromServer.GetBytes(_aesFromServer.KeySize / 8);
+                                        _aesFromServer.IV = passFromServer.GetBytes(_aesFromServer.BlockSize / 8);
 
-                                            byte[] thumbnail = null;
-                                            if (playbackInfoThumbnailLength != 0)
-                                            {
-                                                thumbnail = new byte[playbackInfoThumbnailLength];
-                                                Buffer.BlockCopy(dataDecoded, dataDecodedPosition, thumbnail, 0, playbackInfoThumbnailLength);
-                                            }
-
-                                            var widgetService = DependencyService.Get<IWidgetService>();
-                                            widgetService.UpdateWidget(artist, title, thumbnail);
+                                        var proc = _aesFromServer.CreateDecryptor();
+                                        using (var crypto = new CryptoStream(MemoryStream, proc, CryptoStreamMode.Write))
+                                        {
+                                            crypto.Write(data, 0, data.Length);
+                                            crypto.Clear();
+                                            crypto.Close();
                                         }
-                                        dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount(responseData);
-                                        break;
-                                    default:
-                                        dataDecodedPosition += sizeof(int);
-                                        break;
+                                        MemoryStream.Close();
+
+                                        dataDecoded = MemoryStream.ToArray();
+                                    }
                                 }
                             }
                             catch (Exception error)
                             {
                                 Debug.WriteLine(error.ToString());
+                                continue;
                             }
-                        }
+
+                            if (dataDecoded.Length == 0)
+                                continue;
+
+                            for (int dataDecodedPosition = 0; dataDecodedPosition < dataDecoded.Length - sizeof(int);)
+                            {
+                                CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie odebranej komendy
+                                try
+                                {
+                                    switch (commandFromServer)
+                                    {
+                                        case CommandsFromServer.SEND_PING:
+                                            dataDecodedPosition += sizeof(int);
+                                            break;
+                                        case CommandsFromServer.SEND_PLAYBACK_INFO:
+                                            if (dataDecoded.Length < (3 * sizeof(int)))
+                                            {
+                                                dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
+                                                break;
+                                            }
+                                            dataDecodedPosition += sizeof(int);
+                                            int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
+                                            dataDecodedPosition += sizeof(int);
+                                            int playbackInfoThumbnailLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego thumbnail'a
+                                            if (dataDecoded.Length < (3 * sizeof(int) + playbackInfoStringLength + playbackInfoThumbnailLength))
+                                            {
+                                                dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
+                                                break;
+                                            }
+                                            dataDecodedPosition += sizeof(int);
+                                            string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
+                                            string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
+                                            dataDecodedPosition += playbackInfoStringLength;
+                                            if (playbackInfoStringArray.Length == 3)
+                                            {
+                                                bool playing = bool.Parse(playbackInfoStringArray[0]);
+                                                string artist = playbackInfoStringArray[1];
+                                                string title = playbackInfoStringArray[2];
+
+                                                byte[] thumbnail = null;
+                                                if (playbackInfoThumbnailLength != 0)
+                                                {
+                                                    thumbnail = new byte[playbackInfoThumbnailLength];
+                                                    Buffer.BlockCopy(dataDecoded, dataDecodedPosition, thumbnail, 0, playbackInfoThumbnailLength);
+                                                }
+
+                                                var widgetService = DependencyService.Get<IWidgetService>();
+                                                widgetService.UpdateWidget(artist, title, thumbnail);
+                                            }
+                                            dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount(responseData);
+                                            break;
+                                        default:
+                                            dataDecodedPosition += sizeof(int);
+                                            break;
+                                    }
+                                }
+                                catch (Exception error)
+                                {
+                                    Debug.WriteLine(error.ToString());
+                                }
+                            }
+                        }                        
                     }
                     Thread.Sleep(100);
                 }
@@ -256,7 +269,7 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             }
         }
-        private static byte[] GenerateSalt(int size, string password)
+        private static byte[] GenerateSalt(int size, string password) //generowanie ziarna do szyfrowania symetrycznego
         {
             var buffer = new byte[size];
             var passBytes = ASCIIEncoding.ASCII.GetBytes(password);
@@ -286,86 +299,91 @@ namespace Pilot
             }
             if (ConnectionClass.connected)
             {
-                try
+                ConnectionState sendConnectionState = ConnectionState.SEND_SUCCESS;
+
+                for (int i = 0; i < 5; ++i) //próba ponownego połączenia w przypadku utraty łączności
                 {
-                    Byte[] command;
-                    Byte[] dataToSend;
-                    Byte[] dataToSendEncoded;
-                    command = BitConverter.GetBytes((int)commands);
-
-                    if (data == null)
+                    try
                     {
-                        dataToSend = new Byte[sizeof(int) + command.Length];
-                        Buffer.BlockCopy(BitConverter.GetBytes((int)command.Length), 0, dataToSend, 0, sizeof(int));
-                        Buffer.BlockCopy(command, 0, dataToSend, sizeof(int), command.Length);
-                        Debug.WriteLine("Message size: " + command.Length);
-                        Debug.WriteLine("Message: " + String.Join(" ", dataToSend));
+                        Byte[] command;
+                        Byte[] dataToSend;
+                        Byte[] dataToSendEncoded;
+                        command = BitConverter.GetBytes((int)commands);
 
-                        try
+                        if (data == null)
                         {
-                            using (var stream = new MemoryStream())
-                            {
-                                var proc = _aes.CreateEncryptor();
-                                using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
-                                {
-                                    crypto.Write(dataToSend, 0, dataToSend.Length);
-                                    crypto.Clear();
-                                    crypto.Close();
-                                }
-                                stream.Close();
+                            dataToSend = new Byte[command.Length];
+                            Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
 
-                                dataToSendEncoded = stream.ToArray();
+                            try
+                            {
+                                using (var stream = new MemoryStream())
+                                {
+                                    var proc = _aes.CreateEncryptor();
+                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
+                                    {
+                                        crypto.Write(dataToSend, 0, dataToSend.Length);
+                                        crypto.Clear();
+                                        crypto.Close();
+                                    }
+                                    stream.Close();
+
+                                    dataToSendEncoded = stream.ToArray();
+                                }
+                            }
+                            catch (Exception error)
+                            {
+                                exceptionText = error.ToString();
+                                return ConnectionState.SEND_NOT_SUCCESS;
                             }
                         }
-                        catch (Exception error)
+                        else
                         {
-                            exceptionText = error.ToString();
-                            return ConnectionState.SEND_NOT_SUCCESS;
-                        }
-                    }
-                    else
-                    {
-                        dataToSend = new Byte[sizeof(int) + command.Length + data.Length];
-                        int messageSize = (int)(command.Length + data.Length);
-                        Debug.WriteLine("Message size: " + messageSize);
-                        Buffer.BlockCopy(BitConverter.GetBytes(messageSize), 0, dataToSend, 0, sizeof(int));
-                        Buffer.BlockCopy(command, 0, dataToSend, sizeof(int), command.Length);
-                        Buffer.BlockCopy(data, 0, dataToSend, sizeof(int) + command.Length, data.Length);
-                        Debug.WriteLine("Message: " + String.Join(" ", dataToSend));
+                            dataToSend = new Byte[command.Length + data.Length];
+                            int messageSize = (int)(command.Length + data.Length);
+                            Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                            Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
 
-                        try
-                        {
-                            using (var stream = new MemoryStream())
+                            try
                             {
-                                var proc = _aes.CreateEncryptor();
-                                using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
+                                using (var stream = new MemoryStream())
                                 {
-                                    crypto.Write(dataToSend, 0, dataToSend.Length);
-                                    crypto.Clear();
-                                    crypto.Close();
-                                }
-                                stream.Close();
+                                    var proc = _aes.CreateEncryptor();
+                                    using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
+                                    {
+                                        crypto.Write(dataToSend, 0, dataToSend.Length);
+                                        crypto.Clear();
+                                        crypto.Close();
+                                    }
+                                    stream.Close();
 
-                                dataToSendEncoded = stream.ToArray();
+                                    dataToSendEncoded = stream.ToArray();
+                                }
+                            }
+                            catch (Exception error)
+                            {
+                                exceptionText = error.ToString();
+                                return ConnectionState.SEND_NOT_SUCCESS;
                             }
                         }
-                        catch (Exception error)
-                        {
-                            exceptionText = error.ToString();
-                            return ConnectionState.SEND_NOT_SUCCESS;
-                        }
-                    }
 
-                    Debug.WriteLine("Encoded message: " + String.Join(" ", dataToSendEncoded));
-                    ConnectionClass.stream.Write(dataToSendEncoded, 0, dataToSendEncoded.Length);
-                    return ConnectionState.SEND_SUCCESS;
+                        byte[] dataToSendEncodedWithLength = new byte[sizeof(int) + dataToSendEncoded.Length];
+                        Buffer.BlockCopy(BitConverter.GetBytes(dataToSendEncoded.Length), 0, dataToSendEncodedWithLength, 0, sizeof(int));
+                        Buffer.BlockCopy(dataToSendEncoded, 0, dataToSendEncodedWithLength, sizeof(int), dataToSendEncoded.Length);
+                        ConnectionClass.stream.Write(dataToSendEncodedWithLength, 0, dataToSendEncodedWithLength.Length);
+                        sendConnectionState = ConnectionState.SEND_SUCCESS;
+                        break;
+                    }
+                    catch (Exception error)
+                    {
+                        exceptionText = error.ToString();
+                        Disconnect();
+                        Connect(ipAddress, port.ToString(), password);
+                        sendConnectionState = ConnectionState.SEND_NOT_SUCCESS;
+                    }
                 }
-                catch (Exception error)
-                {
-                    exceptionText = error.ToString();
-                    Disconnect();
-                    return ConnectionState.SEND_NOT_SUCCESS;
-                }
+
+                return sendConnectionState;
             }
             else
             {

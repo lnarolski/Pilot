@@ -64,7 +64,6 @@ namespace Pilot
         Stopwatch doubleTapMouseTimer; //timer wykorzystywany do określenia długiego wciśnięcia lewego przycisku myszy
         bool softKeyboardFirstShow = true; //pierwsze wyświetlenie klawiatury
 
-        IWidgetService widgetService;
         public MainPage()
         {
             InitializeComponent();
