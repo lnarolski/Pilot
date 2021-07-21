@@ -65,6 +65,37 @@ namespace Pilot
         private static IWidgetService widgetService;
         private static PasswordDeriveBytes pass;
 
+        public static bool pingServer = false;
+        public static bool pingServerStopped = true;
+        public static bool sendingPing = false;
+        private static Task pingServerTask;
+
+        private static void PingServer()
+        {
+            pingServerStopped = false;
+
+            DateTime lastPingDateTime = DateTime.Now;
+
+            while (pingServer)
+            {
+                if ((DateTime.Now - lastPingDateTime).Seconds > 5)
+                {
+                    sendingPing = true;
+                    if (ConnectionClass.Send(CommandsFromClient.SEND_PING) != ConnectionState.SEND_SUCCESS)
+                    {
+                        pingServer = false;
+                        break;
+                    }
+                    else
+                        lastPingDateTime = DateTime.Now;
+                    sendingPing = false;
+                }
+                Thread.Sleep(500);
+            }
+            sendingPing = false;
+            pingServerStopped = true;
+        }
+
         private static void ReceiveData()
         {
             readDataStopped = false;
@@ -224,6 +255,21 @@ namespace Pilot
                 _aes.Key = pass.GetBytes(_aes.KeySize / 8);
                 _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
 
+                if (!pingServer && pingServerStopped)
+                {
+                    pingServer = true;
+                    pingServerTask = new Task(new Action(PingServer));
+                    pingServerTask.Start();
+                }
+                else if (!sendingPing)
+                {
+                    pingServer = false;
+                    while (!pingServerStopped) { };
+                    pingServer = true;
+                    pingServerTask = new Task(new Action(PingServer));
+                    pingServerTask.Start();
+                }
+
                 if (widgetService == null)
                     widgetService = DependencyService.Get<IWidgetService>();
                 widgetService.CreateWidget();
@@ -246,6 +292,9 @@ namespace Pilot
             {
                 if (widgetService != null)
                     widgetService.RemoveWidget();
+
+                if (!sendingPing)
+                    pingServer = false;
 
                 stream.Close();
                 tcpClient.Close();
@@ -302,6 +351,9 @@ namespace Pilot
 
                 for (int i = 0; i < 5; ++i) //próba ponownego połączenia w przypadku utraty łączności
                 {
+                    if (!ConnectionClass.connected)
+                        ConnectionClass.Connect(ipAddress, port.ToString(), password);
+
                     try
                     {
                         Byte[] command;
@@ -377,7 +429,6 @@ namespace Pilot
                     {
                         exceptionText = error.ToString();
                         Disconnect();
-                        Connect(ipAddress, port.ToString(), password);
                         sendConnectionState = ConnectionState.SEND_NOT_SUCCESS;
                     }
                 }
