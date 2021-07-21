@@ -108,6 +108,8 @@ namespace Pilot.Droid.Services
             mediaSessionCompat = new MediaSessionCompat(context, channelId);
 
             Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
+            mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, AppResources.UnknownArtist);
+            mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
             mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
             mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
 
@@ -202,7 +204,7 @@ namespace Pilot.Droid.Services
 
         public void UpdateWidget(string artist, string title, byte[] thumbnail)
         {
-            if (notification != null)
+            if (notification != null && mediaSessionCompat != null)
             {
                 AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
                 builder.SetVisibility(NotificationCompat.VisibilityPublic)
@@ -217,15 +219,29 @@ namespace Pilot.Droid.Services
                     .SetNotificationSilent()
                     .SetVibrate(new long[] { 0L });
 
+                Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
+
                 if (artist == "")
+                {
                     builder.SetContentTitle(AppResources.UnknownArtist);
+                    mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, AppResources.UnknownArtist);
+                }
                 else
+                {
                     builder.SetContentTitle(artist);
+                    mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, artist);
+                }
 
                 if (title == "")
+                {
                     builder.SetContentText(AppResources.UnknownTitle);
+                    mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
+                }
                 else
+                {
                     builder.SetContentText(title);
+                    mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, title);
+                }
 
                 if (thumbnail != null)
                 {
@@ -235,6 +251,8 @@ namespace Pilot.Droid.Services
 
                 notification = builder.Build();
                 notificationManager.Notify(messageId, notification);
+
+                mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
             }
         }
 
