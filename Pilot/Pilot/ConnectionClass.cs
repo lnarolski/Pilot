@@ -156,11 +156,10 @@ namespace Pilot
                                             string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
                                             string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
                                             dataDecodedPosition += playbackInfoStringLength;
-                                            if (playbackInfoStringArray.Length == 3)
+                                            if (playbackInfoStringArray.Length == 2)
                                             {
-                                                bool playing = bool.Parse(playbackInfoStringArray[0]);
-                                                string artist = playbackInfoStringArray[1];
-                                                string title = playbackInfoStringArray[2];
+                                                string artist = playbackInfoStringArray[0];
+                                                string title = playbackInfoStringArray[1];
 
                                                 byte[] thumbnail = null;
                                                 if (playbackInfoThumbnailLength != 0)

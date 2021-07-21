@@ -221,7 +221,7 @@ namespace Pilot.Droid.Services
 
                 Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();
 
-                if (artist == "")
+                if (artist.Replace("\0", "") == "")
                 {
                     builder.SetContentTitle(AppResources.UnknownArtist);
                     mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, AppResources.UnknownArtist);
@@ -232,7 +232,7 @@ namespace Pilot.Droid.Services
                     mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyArtist, artist);
                 }
 
-                if (title == "")
+                if (title.Replace("\0", "") == "")
                 {
                     builder.SetContentText(AppResources.UnknownTitle);
                     mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
@@ -243,11 +243,12 @@ namespace Pilot.Droid.Services
                     mediaMetadataCompat.PutString(Android.Support.V4.Media.MediaMetadataCompat.MetadataKeyTitle, title);
                 }
 
+                Bitmap bitmap = null;
                 if (thumbnail != null)
                 {
-                    Bitmap bitmap = BitmapFactory.DecodeByteArray(thumbnail, 0, thumbnail.Length);
-                    builder.SetLargeIcon(bitmap);
+                    bitmap = BitmapFactory.DecodeByteArray(thumbnail, 0, thumbnail.Length);
                 }
+                builder.SetLargeIcon(bitmap);
 
                 notification = builder.Build();
                 notificationManager.Notify(messageId, notification);
