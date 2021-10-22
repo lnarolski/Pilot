@@ -223,6 +223,15 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pilot playback notification.
+        /// </summary>
+        public static string NotificationName {
+            get {
+                return ResourceManager.GetString("NotificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {

@@ -32,5 +32,13 @@ namespace Pilot.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+        protected override void OnResume()
+        {
+            if (!ConnectionClass.connected)
+                ConnectionClass.Connect(ConnectionClass.ipAddress, ConnectionClass.port.ToString(), ConnectionClass.password);
+
+            base.OnResume();
+        }
     }
 }

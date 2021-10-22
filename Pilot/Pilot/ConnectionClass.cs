@@ -225,6 +225,9 @@ namespace Pilot
         }
         public static ConnectionState Connect(string ipAddress, string port, string password) //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
         {
+            if (ipAddress == "" || port == "0")
+                return ConnectionState.CONNECTION_NOT_ESTABLISHED;
+
             try
             {
                 tcpClient = new TcpClient();

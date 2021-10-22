@@ -156,6 +156,13 @@ namespace Pilot.Droid.Services
                 initialised = true;
             }
 
+            // Works only on Android 11
+            var resultIntent = new Intent(context, typeof(MainActivity));
+            PendingIntent notifyPendingIntent = PendingIntent.GetActivity(
+                    context, 0, resultIntent, PendingIntentFlags.UpdateCurrent
+            );
+            //
+
             AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
             builder.SetVisibility(NotificationCompat.VisibilityPublic)
                 .SetSmallIcon(Resource.Mipmap.icon)
@@ -168,7 +175,8 @@ namespace Pilot.Droid.Services
                 .SetContentText(AppResources.UnknownArtist)
                 .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
                 .SetOngoing(true)
-                .SetNotificationSilent()
+                .SetSilent(true)
+                .SetContentIntent(notifyPendingIntent)
                 .SetVibrate(new long[] { 0L });
 
             notification = builder.Build();
@@ -181,7 +189,7 @@ namespace Pilot.Droid.Services
 
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
-                NotificationChannel channel = new NotificationChannel(channelId, "pilotChannelCharSequence", NotificationImportance.Default);
+                NotificationChannel channel = new NotificationChannel(channelId, AppResources.NotificationName, NotificationImportance.Default);
                 channel.Description = AppResources.NotificationDescription;
                 // Register the channel with the system; you can't change the importance
                 // or other notification behaviors after this
@@ -216,7 +224,7 @@ namespace Pilot.Droid.Services
                     .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
                     .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
                     .SetOngoing(true)
-                    .SetNotificationSilent()
+                    .SetSilent(true)
                     .SetVibrate(new long[] { 0L });
 
                 Android.Support.V4.Media.MediaMetadataCompat.Builder mediaMetadataCompat = new Android.Support.V4.Media.MediaMetadataCompat.Builder();

@@ -171,6 +171,9 @@
   <data name="NotificationDescription" xml:space="preserve">
     <value>Application playback control notification</value>
   </data>
+  <data name="NotificationName" xml:space="preserve">
+    <value>Pilot playback notification</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
