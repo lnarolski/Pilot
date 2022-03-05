@@ -11,7 +11,7 @@ Mobilna aplikacja do zdalnego sterowania komputerem poprzez sieć komputerową d
 |<img width="900" src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot4-android.png">|<img width="900"  src="https://raw.githubusercontent.com/lnarolski/Pilot/master/Screenshots/screenshot4-uwp.png">|
 
 # Działanie
-Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z zainstalowanym systemem Windows. Aplikacja umożliwia obsługę aplikacji multimedialnych uruchomionych na komputerze (np. Spotify, VLC) oraz otwieranie zapamiętanych adresów stron WWW.
+Zadaniem aplikacji jest kontrola działania myszki i klawiatury na komputerze z zainstalowanym systemem Windows. Aplikacja umożliwia obsługę aplikacji multimedialnych uruchomionych na komputerze (np. Spotify, VLC) oraz otwieranie zapamiętanych adresów stron WWW. Do kontroli można użyć także widgetu wyświetlanego na Pasku stanu lub Ekranie blokady. Dodano również sterowanie odtwarzaniem z poziomu smartwatch'a lub smartband'a (np. Mi Band lub Amazfit) podłączonego do telefonu z uruchomioną aplikacją.
 W przypadku niektórych programów (np. menedżera zadań, itd.) wymagane jest uruchomienie aplikacji serwera z uprawnieniami administracyjnymi.
 
 # Bugi
@@ -21,7 +21,6 @@ W przypadku niektórych programów (np. menedżera zadań, itd.) wymagane jest u
 
 # TODO
 - Dodanie zabezpieczenia przed powielaniem pakietów z poleceniami
-- Dodanie kontroli multimediów spoza aplikacji (np. przez ekran blokady lub opaskę Mi Band)
 - Zmiana biblioteki do wykrywania gestów dotyku
 - Zmiana sposobu generowania komendy wciśnięcia prawego przycisku myszy
 
