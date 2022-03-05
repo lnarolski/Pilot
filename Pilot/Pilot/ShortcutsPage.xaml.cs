@@ -73,37 +73,37 @@ namespace Pilot
 
         private void PreviousButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_PREVIOUS)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_PREVIOUS)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
         private void PlayStopButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_PLAYSTOP)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_PLAYSTOP)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
         private void NextButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_NEXT)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_NEXT)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
         private void VolDownButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_VOLDOWN)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_VOLDOWN)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
         private void StopButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_STOP)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_STOP)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
         private void VolUpButton_Clicked(object sender, EventArgs e)
         {
-            if ((state = ConnectionClass.Send(Commands.SEND_VOLUP)) != ConnectionState.SEND_SUCCESS)
+            if ((state = ConnectionClass.Send(CommandsFromClient.SEND_VOLUP)) != ConnectionState.SEND_SUCCESS)
                 ShowAlert(state);
         }
 
@@ -118,7 +118,7 @@ namespace Pilot
             else //Wysyłanie polecenia związanego z klikniętą komórką w innym wypadku
             {
                 byte[] WWWAddressByte = Encoding.ASCII.GetBytes(((ShortcutCell)e.Item).WWWAddress);
-                ConnectionClass.Send(Commands.SEND_OPEN_WEBPAGE, WWWAddressByte);
+                ConnectionClass.Send(CommandsFromClient.SEND_OPEN_WEBPAGE, WWWAddressByte);
             }
         }
 

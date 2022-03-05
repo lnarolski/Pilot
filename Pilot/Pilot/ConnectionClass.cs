@@ -6,12 +6,13 @@ using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Pilot
 {
-    enum ConnectionState //statusy związane z komunikacją
+    public enum ConnectionState //statusy związane z komunikacją
     {
         CONNECTION_ESTABLISHED,
         CONNECTION_NOT_ESTABLISHED,
@@ -20,16 +21,18 @@ namespace Pilot
         SEND_SUCCESS,
         SEND_NOT_SUCCESS,
     }
-    static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
+
+    public static class ConnectionClass //statyczna klasa odpowiedzialna za komunikację poprzez sieć
     {
         public static TcpClient tcpClient;
 
         public static Image connectedIndicatorImage;
         public static Label connectedIndicatorLabel;
         private static bool connectedValue;
-        public static bool connected {
+        public static bool connected
+        {
             get { return connectedValue; }
-            set 
+            set
             {
                 if (connectedIndicatorImage != null)
                     Device.BeginInvokeOnMainThread(() =>
@@ -54,26 +57,177 @@ namespace Pilot
         public static NetworkStream stream;
         public static short port;
         public static string password = "";
-        private static byte[] readBuffer = new byte[4096];
+        private static byte[] readBuffer = new byte[1048576]; // 1024 KB
 
         public static bool afterAutoreconnect = false;
         public static bool startApplicationConnectAttempt = true;
+        private static AesCryptoServiceProvider _aes;
+        private static IWidgetService widgetService;
+        private static PasswordDeriveBytes pass;
 
-        private static async void ReceiveData()
+        public static bool pingServer = false;
+        public static bool pingServerStopped = true;
+        public static bool sendingPing = false;
+        private static Task pingServerTask;
+
+        private static void PingServer()
+        {
+            pingServerStopped = false;
+
+            DateTime lastPingDateTime = DateTime.Now;
+
+            while (pingServer)
+            {
+                if ((DateTime.Now - lastPingDateTime).Seconds > 5)
+                {
+                    sendingPing = true;
+                    if (ConnectionClass.Send(CommandsFromClient.SEND_PING) != ConnectionState.SEND_SUCCESS)
+                    {
+                        pingServer = false;
+                        break;
+                    }
+                    else
+                        lastPingDateTime = DateTime.Now;
+                    sendingPing = false;
+                }
+                Thread.Sleep(500);
+            }
+            sendingPing = false;
+            pingServerStopped = true;
+        }
+
+        private static void ReceiveData()
         {
             readDataStopped = false;
             try
             {
                 while (readData)
                 {
-                    await stream.ReadAsync(readBuffer, 0, readBuffer.Length);
+                    if (stream.DataAvailable)
+                    {
+                        Int32 bytes = stream.Read(readBuffer, 0, readBuffer.Length); //odczyt danych z bufora
+
+                        for (int position = 0; position < bytes - sizeof(int);)
+                        {
+                            int messageLength = BitConverter.ToInt32(readBuffer, position);
+                            position += sizeof(int);
+
+                            if (position + messageLength > bytes)
+                                break; //odebrano niekompletną wiadomość
+
+                            byte[] data = new byte[messageLength];
+                            byte[] dataDecoded = null;
+
+                            Buffer.BlockCopy(readBuffer, position, data, 0, messageLength);
+                            position += messageLength;
+
+                            AesCryptoServiceProvider _aesFromServer;
+                            _aesFromServer = new AesCryptoServiceProvider();
+                            _aesFromServer.KeySize = 256;
+                            _aesFromServer.BlockSize = 128;
+                            _aesFromServer.Padding = PaddingMode.Zeros;
+
+                            try
+                            {
+                                using (var passFromServer = new PasswordDeriveBytes(password, GenerateSalt(_aesFromServer.BlockSize / 8, password)))
+                                {
+                                    using (var MemoryStream = new MemoryStream())
+                                    {
+                                        _aesFromServer.Key = passFromServer.GetBytes(_aesFromServer.KeySize / 8);
+                                        _aesFromServer.IV = passFromServer.GetBytes(_aesFromServer.BlockSize / 8);
+
+                                        var proc = _aesFromServer.CreateDecryptor();
+                                        using (var crypto = new CryptoStream(MemoryStream, proc, CryptoStreamMode.Write))
+                                        {
+                                            crypto.Write(data, 0, data.Length);
+                                            crypto.Clear();
+                                            crypto.Close();
+                                        }
+                                        MemoryStream.Close();
+
+                                        dataDecoded = MemoryStream.ToArray();
+                                    }
+                                }
+                            }
+                            catch (Exception error)
+                            {
+                                Debug.WriteLine(error.ToString());
+                                continue;
+                            }
+
+                            if (dataDecoded.Length == 0)
+                                continue;
+
+                            for (int dataDecodedPosition = 0; dataDecodedPosition < dataDecoded.Length - sizeof(int);)
+                            {
+                                CommandsFromServer commandFromServer = (CommandsFromServer)BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie odebranej komendy
+                                try
+                                {
+                                    switch (commandFromServer)
+                                    {
+                                        case CommandsFromServer.SEND_PING:
+                                            dataDecodedPosition += sizeof(int);
+                                            break;
+                                        case CommandsFromServer.SEND_PLAYBACK_INFO:
+                                            if (dataDecoded.Length < (3 * sizeof(int)))
+                                            {
+                                                dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
+                                                break;
+                                            }
+                                            dataDecodedPosition += sizeof(int);
+                                            int playbackInfoStringLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego tekstu
+                                            dataDecodedPosition += sizeof(int);
+                                            int playbackInfoThumbnailLength = BitConverter.ToInt32(dataDecoded, dataDecodedPosition); //wyodrębnienie długości odebranego thumbnail'a
+                                            if (dataDecoded.Length < (3 * sizeof(int) + playbackInfoStringLength + playbackInfoThumbnailLength))
+                                            {
+                                                dataDecodedPosition = dataDecoded.Length; //przewiń na koniec odebranego bufora, gdy nie odebrano całej ramki
+                                                break;
+                                            }
+                                            dataDecodedPosition += sizeof(int);
+                                            string responseData = System.Text.Encoding.UTF8.GetString(dataDecoded, dataDecodedPosition, playbackInfoStringLength);
+                                            string[] playbackInfoStringArray = responseData.Split(new char[] { '\u0006' });
+                                            dataDecodedPosition += playbackInfoStringLength;
+                                            if (playbackInfoStringArray.Length == 2)
+                                            {
+                                                string artist = playbackInfoStringArray[0];
+                                                string title = playbackInfoStringArray[1];
+
+                                                byte[] thumbnail = null;
+                                                if (playbackInfoThumbnailLength != 0)
+                                                {
+                                                    thumbnail = new byte[playbackInfoThumbnailLength];
+                                                    Buffer.BlockCopy(dataDecoded, dataDecodedPosition, thumbnail, 0, playbackInfoThumbnailLength);
+                                                }
+
+                                                var widgetService = DependencyService.Get<IWidgetService>();
+                                                widgetService.UpdateWidget(artist, title, thumbnail);
+                                            }
+                                            dataDecodedPosition += playbackInfoStringLength * System.Text.Encoding.UTF8.GetByteCount(responseData);
+                                            break;
+                                        default:
+                                            dataDecodedPosition += sizeof(int);
+                                            break;
+                                    }
+                                }
+                                catch (Exception error)
+                                {
+                                    Debug.WriteLine(error.ToString());
+                                }
+                            }
+                        }                        
+                    }
+                    Thread.Sleep(100);
                 }
             }
-            catch (Exception) { }
+            catch (ObjectDisposedException error) { }
+            catch (Exception error) { Debug.WriteLine(error.ToString()); }
             readDataStopped = true;
         }
         public static ConnectionState Connect(string ipAddress, string port, string password) //łączenie z serwerem, którego adres IP/nazwa hosta podana jest jako argument
         {
+            if (ipAddress == "" || port == "0")
+                return ConnectionState.CONNECTION_NOT_ESTABLISHED;
+
             try
             {
                 tcpClient = new TcpClient();
@@ -82,8 +236,8 @@ namespace Pilot
                 tcpClient.Connect(ipAddress, int.Parse(port));
                 connected = true;
                 stream = ConnectionClass.tcpClient.GetStream();
-                stream.ReadTimeout = 500;
                 stream.WriteTimeout = 500;
+                stream.ReadTimeout = 500;
                 ConnectionClass.ipAddress = ipAddress;
                 ConnectionClass.port = short.Parse(port);
                 ConnectionClass.password = password;
@@ -95,6 +249,33 @@ namespace Pilot
                 readDataTask.Start();
 
                 startApplicationConnectAttempt = false;
+
+                _aes = new AesCryptoServiceProvider();
+                _aes.KeySize = 256;
+                _aes.BlockSize = 128;
+                _aes.Padding = PaddingMode.Zeros;
+                pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password));
+                _aes.Key = pass.GetBytes(_aes.KeySize / 8);
+                _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
+
+                if (!pingServer && pingServerStopped)
+                {
+                    pingServer = true;
+                    pingServerTask = new Task(new Action(PingServer));
+                    pingServerTask.Start();
+                }
+                else if (!sendingPing)
+                {
+                    pingServer = false;
+                    while (!pingServerStopped) { };
+                    pingServer = true;
+                    pingServerTask = new Task(new Action(PingServer));
+                    pingServerTask.Start();
+                }
+
+                if (widgetService == null)
+                    widgetService = DependencyService.Get<IWidgetService>();
+                widgetService.CreateWidget();
 
                 return ConnectionState.CONNECTION_ESTABLISHED;
             }
@@ -112,11 +293,20 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             try
             {
+                if (widgetService != null)
+                    widgetService.RemoveWidget();
+
+                if (!sendingPing)
+                    pingServer = false;
+
                 stream.Close();
                 tcpClient.Close();
 
                 stream.Dispose();
                 tcpClient.Dispose();
+
+                if (pass != null)
+                    pass.Dispose();
 
                 connected = false;
                 readData = false;
@@ -130,7 +320,7 @@ namespace Pilot
                 return ConnectionState.DISCONECT_NOT_SUCCESS;
             }
         }
-        private static byte[] GenerateSalt(int size, string password)
+        private static byte[] GenerateSalt(int size, string password) //generowanie ziarna do szyfrowania symetrycznego
         {
             var buffer = new byte[size];
             var passBytes = ASCIIEncoding.ASCII.GetBytes(password);
@@ -141,7 +331,7 @@ namespace Pilot
             return buffer;
         }
 
-        public static ConnectionState Send(Commands commands, Byte[] data = null) //wysyłanie polecenia
+        public static ConnectionState Send(CommandsFromClient commands, Byte[] data = null) //wysyłanie polecenia
         {
             if (!startApplicationConnectAttempt && (!afterAutoreconnect && !tcpClient.Connected || !ConnectionClass.connected))
             {
@@ -160,33 +350,29 @@ namespace Pilot
             }
             if (ConnectionClass.connected)
             {
-                try
+                ConnectionState sendConnectionState = ConnectionState.SEND_SUCCESS;
+
+                for (int i = 0; i < 5; ++i) //próba ponownego połączenia w przypadku utraty łączności
                 {
-                    Byte[] command;
-                    Byte[] dataToSend;
-                    Byte[] dataToSendEncoded;
-                    command = BitConverter.GetBytes((int)commands);
+                    if (!ConnectionClass.connected)
+                        ConnectionClass.Connect(ipAddress, port.ToString(), password);
 
-                    AesCryptoServiceProvider _aes;
-                    _aes = new AesCryptoServiceProvider();
-                    _aes.KeySize = 256;
-                    _aes.BlockSize = 128;
-                    _aes.Padding = PaddingMode.Zeros;
-
-                    if (data == null)
+                    try
                     {
-                        dataToSend = new Byte[command.Length];
-                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                        Byte[] command;
+                        Byte[] dataToSend;
+                        Byte[] dataToSendEncoded;
+                        command = BitConverter.GetBytes((int)commands);
 
-                        try
+                        if (data == null)
                         {
-                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            dataToSend = new Byte[command.Length];
+                            Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+
+                            try
                             {
                                 using (var stream = new MemoryStream())
                                 {
-                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
-                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
-
                                     var proc = _aes.CreateEncryptor();
                                     using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
                                     {
@@ -199,28 +385,23 @@ namespace Pilot
                                     dataToSendEncoded = stream.ToArray();
                                 }
                             }
+                            catch (Exception error)
+                            {
+                                exceptionText = error.ToString();
+                                return ConnectionState.SEND_NOT_SUCCESS;
+                            }
                         }
-                        catch (Exception error)
+                        else
                         {
-                            exceptionText = error.ToString();
-                            return ConnectionState.SEND_NOT_SUCCESS;
-                        }
-                    }
-                    else
-                    {
-                        dataToSend = new Byte[command.Length + data.Length];
-                        Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
-                        Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
+                            dataToSend = new Byte[command.Length + data.Length];
+                            int messageSize = (int)(command.Length + data.Length);
+                            Buffer.BlockCopy(command, 0, dataToSend, 0, command.Length);
+                            Buffer.BlockCopy(data, 0, dataToSend, command.Length, data.Length);
 
-                        try
-                        {
-                            using (var pass = new PasswordDeriveBytes(password, GenerateSalt(_aes.BlockSize / 8, password)))
+                            try
                             {
                                 using (var stream = new MemoryStream())
                                 {
-                                    _aes.Key = pass.GetBytes(_aes.KeySize / 8);
-                                    _aes.IV = pass.GetBytes(_aes.BlockSize / 8);
-
                                     var proc = _aes.CreateEncryptor();
                                     using (var crypto = new CryptoStream(stream, proc, CryptoStreamMode.Write))
                                     {
@@ -233,28 +414,34 @@ namespace Pilot
                                     dataToSendEncoded = stream.ToArray();
                                 }
                             }
+                            catch (Exception error)
+                            {
+                                exceptionText = error.ToString();
+                                return ConnectionState.SEND_NOT_SUCCESS;
+                            }
                         }
-                        catch (Exception error)
-                        {
-                            exceptionText = error.ToString();
-                            return ConnectionState.SEND_NOT_SUCCESS;
-                        }
-                    }
 
-                    ConnectionClass.stream.Write(dataToSendEncoded, 0, dataToSendEncoded.Length);
-                    return ConnectionState.SEND_SUCCESS;
+                        byte[] dataToSendEncodedWithLength = new byte[sizeof(int) + dataToSendEncoded.Length];
+                        Buffer.BlockCopy(BitConverter.GetBytes(dataToSendEncoded.Length), 0, dataToSendEncodedWithLength, 0, sizeof(int));
+                        Buffer.BlockCopy(dataToSendEncoded, 0, dataToSendEncodedWithLength, sizeof(int), dataToSendEncoded.Length);
+                        ConnectionClass.stream.Write(dataToSendEncodedWithLength, 0, dataToSendEncodedWithLength.Length);
+                        sendConnectionState = ConnectionState.SEND_SUCCESS;
+                        break;
+                    }
+                    catch (Exception error)
+                    {
+                        exceptionText = error.ToString();
+                        Disconnect();
+                        sendConnectionState = ConnectionState.SEND_NOT_SUCCESS;
+                    }
                 }
-                catch (Exception error)
-                {
-                    exceptionText = error.ToString();
-                    Disconnect();
-                    return ConnectionState.SEND_NOT_SUCCESS;
-                }
+
+                return sendConnectionState;
             }
             else
             {
                 return ConnectionState.CONNECTION_NOT_ESTABLISHED;
             }
         }
-    };
+    }
 }

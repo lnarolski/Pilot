@@ -214,6 +214,24 @@ namespace Pilot.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Application playback control notification.
+        /// </summary>
+        public static string NotificationDescription {
+            get {
+                return ResourceManager.GetString("NotificationDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pilot playback notification.
+        /// </summary>
+        public static string NotificationName {
+            get {
+                return ResourceManager.GetString("NotificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
@@ -291,6 +309,24 @@ namespace Pilot.Resx {
         public static string ThirdPartyLicenses {
             get {
                 return ResourceManager.GetString("ThirdPartyLicenses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown artist.
+        /// </summary>
+        public static string UnknownArtist {
+            get {
+                return ResourceManager.GetString("UnknownArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown title.
+        /// </summary>
+        public static string UnknownTitle {
+            get {
+                return ResourceManager.GetString("UnknownTitle", resourceCulture);
             }
         }
         

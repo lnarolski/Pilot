@@ -168,6 +168,12 @@
   <data name="NotFoundSearchPage" xml:space="preserve">
     <value>Nie znaleziono serwerów</value>
   </data>
+  <data name="NotificationDescription" xml:space="preserve">
+    <value>Powiadomienie związane z kontrolą odtwarzacza</value>
+  </data>
+  <data name="NotificationName" xml:space="preserve">
+    <value>Pilot powiadomienie odtwarzania</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -194,6 +200,12 @@
   </data>
   <data name="ThirdPartyLicenses" xml:space="preserve">
     <value>Licencje osób trzecich:</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Nieznany wykonawca</value>
+  </data>
+  <data name="UnknownTitle" xml:space="preserve">
+    <value>Nieznany tytuł</value>
   </data>
   <data name="URLExampleShortcutFormPage" xml:space="preserve">
     <value>www.example.com lub example.com</value>

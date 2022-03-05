@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pilot
 {
-    enum Commands //rodzaje komend
+    public enum CommandsFromClient //rodzaje komend
     {
         SEND_TEXT = 1,
         SEND_BACKSPACE,
@@ -21,5 +21,12 @@ namespace Pilot
         SEND_WHEEL_MOUSE,
         SEND_LEFT_MOUSE_LONG_PRESS_START,
         SEND_LEFT_MOUSE_LONG_PRESS_STOP,
+        SEND_PING,
+    }
+
+    enum CommandsFromServer
+    {
+        SEND_PING = 1,
+        SEND_PLAYBACK_INFO,
     }
 }
