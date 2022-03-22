@@ -66,6 +66,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
+    <Compile Include="Services\WidgetService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -127,12 +128,25 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pilot\Pilot\Pilot.csproj">
       <Project>{dbbbeb3b-bd80-4b35-bfdc-245ebb0dc94b}</Project>
       <Name>Pilot</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\connected.png" />
+    <BundleResource Include="Resources\ic_play_circle_outline.png" />
+    <BundleResource Include="Resources\ic_skip_next.png" />
+    <BundleResource Include="Resources\ic_skip_previous.png" />
+    <BundleResource Include="Resources\ic_stop.png" />
+    <BundleResource Include="Resources\ic_volume_down.png" />
+    <BundleResource Include="Resources\ic_volume_up.png" />
+    <BundleResource Include="Resources\mouse.png" />
+    <BundleResource Include="Resources\mouseWheelIcon.jpg" />
+    <BundleResource Include="Resources\plus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

@@ -15,7 +15,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
@@ -114,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pilot\Pilot.csproj">
-      <Project>{A2D298F7-D5A2-40D9-8E6A-36FD593DDE4F}</Project>
+      <Project>{DBBBEB3B-BD80-4B35-BFDC-245EBB0DC94B}</Project>
       <Name>Pilot</Name>
     </ProjectReference>
   </ItemGroup>
