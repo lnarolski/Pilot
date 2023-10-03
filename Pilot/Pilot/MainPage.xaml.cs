@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
 using Pilot.Resx;
 using System.Globalization;
+using Plugin.InAppBilling;
 
 namespace Pilot
 {
@@ -101,6 +102,59 @@ namespace Pilot
 
             mouseWheelSlider.DragCompleted += MouseWheelSlider_DragCompleted;
             mouseWheelSlider.DragStarted += MouseWheelSlider_DragStarted;
+
+            Appearing += MainPage_Appearing;
+        }
+
+        private void MainPage_Appearing(object sender, EventArgs e)
+        {
+            WasItemPurchased("");
+        }
+
+        public async Task<bool> WasItemPurchased(string productId)
+        {
+            var billing = CrossInAppBilling.Current;
+            try
+            {
+                var connected = await billing.ConnectAsync();
+
+                if (!connected)
+                {
+                    //Couldn't connect
+                    return false;
+                }
+
+                var purchases = await billing.GetPurchasesAsync(ItemType.InAppPurchase);
+
+                //check for null just in case
+                if (purchases?.Any(p => p.ProductId == productId) ?? false)
+                {
+                    //Purchase restored
+                    // if on Android may be good to check if these purchases need to be acknowledge
+                    return true;
+                }
+                else
+                {
+                    //no purchases found
+                    return false;
+                }
+            }
+            catch (InAppBillingPurchaseException purchaseEx)
+            {
+                //Billing Exception handle this based on the type
+                Debug.WriteLine("Error: " + purchaseEx);
+            }
+            catch (Exception ex)
+            {
+                //Something has gone wrong
+                Debug.WriteLine("Error: " + ex);
+            }
+            finally
+            {
+                await billing.DisconnectAsync();
+            }
+
+            return false;
         }
 
         private bool dragFinished = true;
