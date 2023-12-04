@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.UWP", "Pilot\Pilot.UW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot", "Pilot\Pilot\Pilot.csproj", "{DBBBEB3B-BD80-4B35-BFDC-245EBB0DC94B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.iOS", "Pilot.iOS\Pilot.iOS.csproj", "{AA7A8732-9EFB-446D-A5F0-F7A3CA8BB8E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.iOS", "Pilot\Pilot.iOS\Pilot.iOS.csproj", "{AA7A8732-9EFB-446D-A5F0-F7A3CA8BB8E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
