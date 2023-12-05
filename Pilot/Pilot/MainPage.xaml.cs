@@ -6,10 +6,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 using Pilot.Resx;
 using System.Globalization;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace Pilot
 {
@@ -68,6 +70,7 @@ namespace Pilot
         {
             InitializeComponent();
 
+            // TODO Xamarin.Forms.Device.RuntimePlatform is no longer supported. Use Microsoft.Maui.Devices.DeviceInfo.Platform instead. For more details see https://learn.microsoft.com/en-us/dotnet/maui/migration/forms-projects#device-changes
             if (Device.RuntimePlatform == Device.UWP)
             {
                 showKeyboardButton.IsEnabled = false; //funkcja otwierania klawiatury ekranowej nie jest jeszcze wspierana przez API Windowsa

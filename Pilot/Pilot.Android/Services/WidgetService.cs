@@ -20,8 +20,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 [assembly: Dependency(typeof(Pilot.Droid.Services.WidgetService))]
 namespace Pilot.Droid.Services

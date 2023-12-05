@@ -1,15 +1,15 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.Android", "Pilot\Pilot.Android\Pilot.Android.csproj", "{C8161C4B-E5BA-415B-85D5-77226C79283D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.Android", "Pilot\Pilot.Android\Pilot.Android.csproj", "{C8161C4B-E5BA-415B-85D5-77226C79283D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.UWP", "Pilot\Pilot.UWP\Pilot.UWP.csproj", "{FF098CD3-A0BD-4045-9898-311334DEA64F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.UWP", "Pilot\Pilot.UWP\Pilot.UWP.csproj", "{FF098CD3-A0BD-4045-9898-311334DEA64F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot", "Pilot\Pilot\Pilot.csproj", "{DBBBEB3B-BD80-4B35-BFDC-245EBB0DC94B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pilot.iOS", "Pilot\Pilot.iOS\Pilot.iOS.csproj", "{AA7A8732-9EFB-446D-A5F0-F7A3CA8BB8E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pilot.iOS", "Pilot\Pilot.iOS\Pilot.iOS.csproj", "{AA7A8732-9EFB-446D-A5F0-F7A3CA8BB8E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

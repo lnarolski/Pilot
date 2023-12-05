@@ -8,12 +8,13 @@ using Android.Widget;
 using Android.OS;
 using Android.Content;
 using Pilot.Droid.Services;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace Pilot.Droid
 {
     [Activity(Label = "Pilot", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : Microsoft.Maui.MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {

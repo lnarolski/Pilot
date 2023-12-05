@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace Pilot
 {
@@ -30,8 +31,8 @@ namespace Pilot
                 Button DeleteButton = new Button()
                 {
                     Text = AppResources.DeleteShortcutFormPage,
-                    BackgroundColor = Color.Red,
-                    TextColor = Color.White,
+                    BackgroundColor = Colors.Red,
+                    TextColor = Colors.White,
                     Margin = new Thickness(50,100),
                 };
                 DeleteButton.Clicked += DeleteButton_Clicked;
