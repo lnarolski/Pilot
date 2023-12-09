@@ -58,7 +58,7 @@ namespace Pilot
     public partial class MainPage : ContentPage
     {
         //Editor keyboardRead; //pole wykorzystywane do wprowadzania tekstu
-        TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
+        //TouchTracking.TouchTrackingPoint StartPoint, EndPoint; //punkty rozpoczęcia i zakończenia ruchu palcem
         bool moveStart; //rozpoczęcie ruchu palcem
         bool doubleTapStarted; //flaga informująca o wykryciu podwójnego dotknięcia ekranu
         bool touchPressed, touchEntered, touchMoved, touchReleased, touchCancelled, touchExited; //statusy dotknięcia ekranu
@@ -189,84 +189,84 @@ namespace Pilot
             keyboardRead.Text = " "; //przywrócenie tekstu początkowego
         }
 
-        private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args) //zdarzenie związane z dotykaniem "szarego" obszaru
-        {
-            switch (args.Type) //działania związane z rodzajem zdarzenia
-            {
-                case TouchTracking.TouchActionType.Entered:
-                    break;
-                case TouchTracking.TouchActionType.Pressed:
-                    if (doubleTapMouseTimer.IsRunning && doubleTapMouseTimer.ElapsedMilliseconds < 300) // Gdy wykryto podwójne wciśnięcie w czasie mniejszym niż 300 ms
-                    {
-                        rightMouseTimer.Stop();
-                        doubleTapMouseTimer.Stop();
+        //private void TouchEffect_TouchAction(object sender, TouchTracking.TouchActionEventArgs args) //zdarzenie związane z dotykaniem "szarego" obszaru
+        //{
+        //    switch (args.Type) //działania związane z rodzajem zdarzenia
+        //    {
+        //        case TouchTracking.TouchActionType.Entered:
+        //            break;
+        //        case TouchTracking.TouchActionType.Pressed:
+        //            if (doubleTapMouseTimer.IsRunning && doubleTapMouseTimer.ElapsedMilliseconds < 300) // Gdy wykryto podwójne wciśnięcie w czasie mniejszym niż 300 ms
+        //            {
+        //                rightMouseTimer.Stop();
+        //                doubleTapMouseTimer.Stop();
 
-                        doubleTapStarted = true;
-                        ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_START);
-                    }
-                    else
-                    {
-                        touchPressed = true;
-                        touchMoved = false;
-                        touchReleased = false;
-                        rightMouseTimer.Start();
-                        doubleTapMouseTimer.Reset();
-                        doubleTapMouseTimer.Start();
-                    }
-                    break;
-                case TouchTracking.TouchActionType.Moved:
-                    if (moveStart)
-                    {
-                        StartPoint = args.Location;
-                        moveStart = false;
-                    }
-                    else
-                    {
-                        touchMoved = true;
-                        moveStart = true;
-                        EndPoint = args.Location;
-                        double moveX = EndPoint.X - StartPoint.X;
-                        double moveY = EndPoint.Y - StartPoint.Y;
-                        if (moveX == 0.0 && moveY == 0.0)
-                        {
-                            touchMoved = false;
-                        }
-                        else
-                        {
-                            Byte[] moveX_byte = BitConverter.GetBytes(moveX);
-                            Byte[] moveY_byte = BitConverter.GetBytes(moveY);
-                            Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
-                            Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
-                            Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
-                            ConnectionClass.Send(CommandsFromClient.SEND_MOVE_MOUSE, data);
-                        }
-                    }
-                    break;
-                case TouchTracking.TouchActionType.Released:
-                    moveStart = true;
-                    touchReleased = true;
-                    rightMouseTimer.Stop();
-                    if (doubleTapStarted)
-                    {
-                        ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_STOP);
-                        doubleTapStarted = false;
-                    }
-                    else if (touchPressed && !touchMoved)
-                        if (rightMouseTimer.ElapsedMilliseconds > 800)
-                            ConnectionClass.Send(CommandsFromClient.SEND_RIGHT_MOUSE);
-                        else
-                            ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE);
-                    rightMouseTimer.Reset();
-                    break;
-                case TouchTracking.TouchActionType.Cancelled:
-                    moveStart = true;
-                    break;
-                case TouchTracking.TouchActionType.Exited:
-                    moveStart = true;
-                    break;
-                default:
-                    break;
-            }
-        }
+        //                doubleTapStarted = true;
+        //                ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_START);
+        //            }
+        //            else
+        //            {
+        //                touchPressed = true;
+        //                touchMoved = false;
+        //                touchReleased = false;
+        //                rightMouseTimer.Start();
+        //                doubleTapMouseTimer.Reset();
+        //                doubleTapMouseTimer.Start();
+        //            }
+        //            break;
+        //        case TouchTracking.TouchActionType.Moved:
+        //            if (moveStart)
+        //            {
+        //                StartPoint = args.Location;
+        //                moveStart = false;
+        //            }
+        //            else
+        //            {
+        //                touchMoved = true;
+        //                moveStart = true;
+        //                EndPoint = args.Location;
+        //                double moveX = EndPoint.X - StartPoint.X;
+        //                double moveY = EndPoint.Y - StartPoint.Y;
+        //                if (moveX == 0.0 && moveY == 0.0)
+        //                {
+        //                    touchMoved = false;
+        //                }
+        //                else
+        //                {
+        //                    Byte[] moveX_byte = BitConverter.GetBytes(moveX);
+        //                    Byte[] moveY_byte = BitConverter.GetBytes(moveY);
+        //                    Byte[] data = new Byte[moveX_byte.Length + moveY_byte.Length];
+        //                    Buffer.BlockCopy(moveX_byte, 0, data, 0, moveX_byte.Length);
+        //                    Buffer.BlockCopy(moveY_byte, 0, data, moveX_byte.Length, moveY_byte.Length);
+        //                    ConnectionClass.Send(CommandsFromClient.SEND_MOVE_MOUSE, data);
+        //                }
+        //            }
+        //            break;
+        //        case TouchTracking.TouchActionType.Released:
+        //            moveStart = true;
+        //            touchReleased = true;
+        //            rightMouseTimer.Stop();
+        //            if (doubleTapStarted)
+        //            {
+        //                ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE_LONG_PRESS_STOP);
+        //                doubleTapStarted = false;
+        //            }
+        //            else if (touchPressed && !touchMoved)
+        //                if (rightMouseTimer.ElapsedMilliseconds > 800)
+        //                    ConnectionClass.Send(CommandsFromClient.SEND_RIGHT_MOUSE);
+        //                else
+        //                    ConnectionClass.Send(CommandsFromClient.SEND_LEFT_MOUSE);
+        //            rightMouseTimer.Reset();
+        //            break;
+        //        case TouchTracking.TouchActionType.Cancelled:
+        //            moveStart = true;
+        //            break;
+        //        case TouchTracking.TouchActionType.Exited:
+        //            moveStart = true;
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
     }
 }

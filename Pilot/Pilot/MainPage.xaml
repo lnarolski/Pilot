@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Pilot"
-             xmlns:tt="clr-namespace:TouchTracking.Forms;assembly=TouchTracking.Forms"
              xmlns:resources="clr-namespace:Pilot.Resx"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:components="clr-namespace:Pilot" 
@@ -33,10 +32,6 @@
         </Grid>
         <Editor x:Name="keyboardRead" Keyboard="Plain" Grid.Row="1" Grid.Column="0" IsVisible="True" />
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CursorMove" >
-            <Grid.Effects>
-                <tt:TouchEffect Capture="True"
-                                TouchAction="TouchEffect_TouchAction" />
-            </Grid.Effects>
             <Image Source="mouse.png" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Opacity="0.5" />
         </Grid>
         <Grid BackgroundColor="Gray" Grid.Row="1" Grid.Column="3">
