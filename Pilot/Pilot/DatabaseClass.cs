@@ -51,7 +51,7 @@ namespace Pilot
                 }
                 else
                 {
-                    path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }
 
                 if (!File.Exists(Path.Combine(path, "db.db3"))) //Utworzenie lub otwarcie pliku bazy danych

@@ -1,19 +1,12 @@
-﻿using System;
+﻿//using Pilot.Droid.Services;
 
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
-using Android.Content;
-//using Pilot.Droid.Services;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
 
 namespace Pilot.Droid
 {
-    [Activity(Label = "Pilot", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Pilot", Icon = "@mipmap/icon", Theme = "@style/Theme.MaterialComponents.Light.DarkActionBar", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Microsoft.Maui.MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
