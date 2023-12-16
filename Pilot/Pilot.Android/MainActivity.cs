@@ -1,4 +1,4 @@
-﻿//using Pilot.Droid.Services;
+﻿using Pilot.Droid.Services;
 
 using Android.App;
 using Android.Content.PM;
