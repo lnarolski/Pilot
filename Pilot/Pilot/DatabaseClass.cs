@@ -45,7 +45,7 @@ namespace Pilot
             {
                 string path;
 
-                if (DeviceInfo.Platform == DevicePlatform.UWP) //Wybór ścieżki dla pliku bazy danych zależnei od platformy
+                if (DeviceInfo.Platform == DevicePlatform.UWP) //Wybór ścieżki dla pliku bazy danych zależnie od platformy
                 {
                     path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }

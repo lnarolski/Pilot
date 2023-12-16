@@ -70,8 +70,7 @@ namespace Pilot
         {
             InitializeComponent();
 
-            // TODO Xamarin.Forms.Device.RuntimePlatform is no longer supported. Use Microsoft.Maui.Devices.DeviceInfo.Platform instead. For more details see https://learn.microsoft.com/en-us/dotnet/maui/migration/forms-projects#device-changes
-            if (Device.RuntimePlatform == Device.UWP)
+            if (DeviceInfo.Platform == DevicePlatform.WinUI)
             {
                 showKeyboardButton.IsEnabled = false; //funkcja otwierania klawiatury ekranowej nie jest jeszcze wspierana przez API Windowsa
             }
