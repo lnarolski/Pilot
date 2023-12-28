@@ -7,11 +7,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Service.Media;
 using Android.Support.V4.App;
-using Android.Support.V4.Media;
-using Android.Support.V4.Media.Session;
 using Android.Views;
 using Android.Widget;
-using AndroidX.Media.Session;
 using Java.Interop;
 using Java.Lang;
 using Pilot.Resx;
@@ -110,13 +107,13 @@ namespace Pilot.Droid.Services
             mediaSessionCompat = new MediaSession(context, channelId);
 
             MediaMetadata.Builder mediaMetadataCompat = new MediaMetadata.Builder();
-            mediaMetadataCompat.PutString(Media.MediaMetadata.MetadataKeyArtist, AppResources.UnknownArtist);
-            mediaMetadataCompat.PutString(Media.MediaMetadataCompat.MetadataKeyTitle, AppResources.UnknownTitle);
+            mediaMetadataCompat.PutString(MediaMetadata.MetadataKeyArtist, AppResources.UnknownArtist);
+            mediaMetadataCompat.PutString(MediaMetadata.MetadataKeyTitle, AppResources.UnknownTitle);
             mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
             mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
 
             playbackStateCompat = new PlaybackState.Builder().SetActions(PlaybackState.ActionStop | PlaybackState.ActionPlay | PlaybackState.ActionPause | PlaybackState.ActionPlayPause | PlaybackState.ActionSkipToNext | PlaybackState.ActionSkipToPrevious)
-                .SetState(PlaybackState.StateBuffering, PlaybackState.PlaybackPositionUnknown, 0)
+                .SetState(PlaybackStateCode.Buffering, PlaybackState.PlaybackPositionUnknown, 0)
                 .Build();
 
             mediaPlayer = MediaPlayer.Create(context, Resource.Raw.silence);
@@ -165,23 +162,26 @@ namespace Pilot.Droid.Services
             );
             //
 
-            AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
-            builder.SetVisibility(NotificationCompat.VisibilityPublic)
+            Notification.Action.Builder notificationActionBuilder = new Notification.Action.Builder(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent));
+            Notification.Builder notificationBuilder = new Notification.Builder(context, channelId);
+            notificationBuilder.SetVisibility(NotificationVisibility.Public)
                 .SetSmallIcon(Resource.Mipmap.icon)
-                .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
-                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
-                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
-                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
-                .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
-                .SetContentTitle(AppResources.UnknownTitle)
-                .SetContentText(AppResources.UnknownArtist)
-                .SetStyle(new NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
-                .SetOngoing(true)
-                .SetSilent(true)
-                .SetContentIntent(notifyPendingIntent)
-                .SetVibrate(new long[] { 0L });
+                .AddAction(new Notification.Action.Builder(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)).Build())
+                //.AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
+                //.AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
+                //.AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
+                //.AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
+                //.AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
+                //.SetContentTitle(AppResources.UnknownTitle)
+                //.SetContentText(AppResources.UnknownArtist)
+                //.SetStyle(new Notification.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
+                //.SetOngoing(true)
+                ////.SetSilent(true)
+                //.SetContentIntent(notifyPendingIntent)
+                //.SetVibrate(new long[] { 0L });
+                ;
 
-            notification = builder.Build();
+            notification = notificationBuilder.Build();
             notificationManager.Notify(messageId, notification);
         }
 
