@@ -5,6 +5,7 @@
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+	<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
@@ -34,6 +35,7 @@
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.9.141-beta</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.AndroidX.Media" Version="1.7.0" />
     <PackageReference Include="Zeroconf">
       <Version>3.6.11</Version>
     </PackageReference>
