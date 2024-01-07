@@ -2,29 +2,16 @@
 using Android.Content;
 using Android.Graphics;
 using Android.Media;
-using Android.Media.Session;
 using Android.OS;
-using Android.Runtime;
-using Android.Service.Media;
-using Android.Support.V4.App;
-using Android.Views;
-using Android.Widget;
-using Java.Interop;
-using Java.Lang;
 using Pilot.Resx;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using AndroidApp = Android.App.Application;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui;
 using AndroidX.Core.App;
 using Android.Support.V4.Media.Session;
 using Android.Support.V4.Media;
+using System;
 
-[assembly: Dependency(typeof(Pilot.Droid.Services.WidgetService))]
+//[assembly: Dependency(typeof(Pilot.Droid.Services.WidgetService))]
 namespace Pilot.Droid.Services
 {
     class MediaSessionCompatCallbacks : MediaSessionCompat.Callback
@@ -112,13 +99,23 @@ namespace Pilot.Droid.Services
             mediaMetadataCompat.PutString(MediaMetadata.MetadataKeyArtist, AppResources.UnknownArtist);
             mediaMetadataCompat.PutString(MediaMetadata.MetadataKeyTitle, AppResources.UnknownTitle);
             mediaSessionCompat.SetMetadata(mediaMetadataCompat.Build());
-            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, PendingIntentFlags.CancelCurrent)); //TODO: Not working
+
+            PendingIntentFlags pendingIntentFlags;
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
+                pendingIntentFlags = PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable;
+            }
+            else
+            {
+                pendingIntentFlags = PendingIntentFlags.CancelCurrent;
+            }
+            mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, pendingIntentFlags)); //TODO: Not working
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionStop | PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious)
                 .SetState(PlaybackStateCompat.StateBuffering, PlaybackStateCompat.PlaybackPositionUnknown, 0)
                 .Build();
 
-            mediaPlayer = MediaPlayer.Create(context, Pilot.Droid.Resource.Raw.silence);
+            mediaPlayer = MediaPlayer.Create(context, Resource.Raw.silence);
             mediaPlayer.Start();
 
             mediaSessionCompat.SetPlaybackState(playbackStateCompat);
@@ -148,7 +145,14 @@ namespace Pilot.Droid.Services
                 intentFilter.AddAction("VolumeDown");
                 intentFilter.AddAction(Intent.ActionMediaButton);
 
-                context.RegisterReceiver(this, intentFilter);
+                if (OperatingSystem.IsAndroidVersionAtLeast(33))
+                {
+                    context.RegisterReceiver(this, intentFilter, ReceiverFlags.NotExported);
+                }
+                else
+                {
+                    context.RegisterReceiver(this, intentFilter);
+                }
 
                 CreateMediaSession();
 
@@ -159,8 +163,19 @@ namespace Pilot.Droid.Services
 
             // Works only on Android 11
             var resultIntent = new Intent(context, typeof(MainActivity));
+
+            PendingIntentFlags pendingIntentFlags;
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
+                pendingIntentFlags = PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable;
+            }
+            else
+            {
+                pendingIntentFlags = PendingIntentFlags.UpdateCurrent;
+            }
+
             PendingIntent notifyPendingIntent = PendingIntent.GetActivity(
-                    context, 0, resultIntent, PendingIntentFlags.UpdateCurrent
+                    context, 0, resultIntent, pendingIntentFlags
             );
             //
 

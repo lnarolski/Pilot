@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui;
 
-[assembly: Dependency(typeof(Pilot.UWP.Services.WidgetService))]
+//[assembly: Dependency(typeof(Pilot.UWP.Services.WidgetService))]
 namespace Pilot.UWP.Services
 {
     class WidgetService : IWidgetService
