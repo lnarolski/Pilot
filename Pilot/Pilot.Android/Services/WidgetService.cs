@@ -112,7 +112,7 @@ namespace Pilot.Droid.Services
             mediaSessionCompat.SetMediaButtonReceiver(PendingIntent.GetBroadcast(context, 5, mediaButtonReceiverIntent, pendingIntentFlags)); //TODO: Not working
 
             playbackStateCompat = new PlaybackStateCompat.Builder().SetActions(PlaybackStateCompat.ActionStop | PlaybackStateCompat.ActionPlay | PlaybackStateCompat.ActionPause | PlaybackStateCompat.ActionPlayPause | PlaybackStateCompat.ActionSkipToNext | PlaybackStateCompat.ActionSkipToPrevious)
-                .SetState(PlaybackStateCompat.StateBuffering, PlaybackStateCompat.PlaybackPositionUnknown, 0)
+                .SetState(PlaybackStateCompat.StatePlaying, PlaybackStateCompat.PlaybackPositionUnknown, 0)
                 .Build();
 
             mediaPlayer = MediaPlayer.Create(context, Resource.Raw.silence);
@@ -179,14 +179,23 @@ namespace Pilot.Droid.Services
             );
             //
 
+            PendingIntentFlags cancelCurrentPendingIntentFlags;
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
+                cancelCurrentPendingIntentFlags = PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable;
+            }
+            else
+            {
+                cancelCurrentPendingIntentFlags = PendingIntentFlags.CancelCurrent;
+            }
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, channelId);
             notificationBuilder.SetVisibility(NotificationCompat.VisibilityPublic)
                 .SetSmallIcon(Resource.Mipmap.icon)
-                .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
-                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
-                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
-                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
-                .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
+                .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, cancelCurrentPendingIntentFlags)) // #0
+                .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, cancelCurrentPendingIntentFlags)) // #1
+                .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, cancelCurrentPendingIntentFlags))  // #2
+                .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, cancelCurrentPendingIntentFlags))     // #3
+                .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, cancelCurrentPendingIntentFlags))     // #4
                 .SetContentTitle(AppResources.UnknownTitle)
                 .SetContentText(AppResources.UnknownArtist)
                 .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
@@ -231,14 +240,23 @@ namespace Pilot.Droid.Services
         {
             if (notification != null && mediaSessionCompat != null)
             {
+                PendingIntentFlags cancelCurrentPendingIntentFlags;
+                if (OperatingSystem.IsAndroidVersionAtLeast(31))
+                {
+                    cancelCurrentPendingIntentFlags = PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable;
+                }
+                else
+                {
+                    cancelCurrentPendingIntentFlags = PendingIntentFlags.CancelCurrent;
+                }
                 AndroidX.Core.App.NotificationCompat.Builder builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId);
                 builder.SetVisibility(NotificationCompat.VisibilityPublic)
                     .SetSmallIcon(Resource.Mipmap.icon)
-                    .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, PendingIntentFlags.CancelCurrent)) // #0
-                    .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, PendingIntentFlags.CancelCurrent)) // #1
-                    .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, PendingIntentFlags.CancelCurrent))  // #2
-                    .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, PendingIntentFlags.CancelCurrent))     // #3
-                    .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, PendingIntentFlags.CancelCurrent))     // #4
+                    .AddAction(Resource.Drawable.ic_volume_down, "VolumeDown", PendingIntent.GetBroadcast(context, 0, volumeDownIntent, cancelCurrentPendingIntentFlags)) // #0
+                    .AddAction(Resource.Drawable.ic_skip_previous, "Previous", PendingIntent.GetBroadcast(context, 1, previousIntent, cancelCurrentPendingIntentFlags)) // #1
+                    .AddAction(Resource.Drawable.ic_play_circle_outline, "PlayStop", PendingIntent.GetBroadcast(context, 2, playStopIntent, cancelCurrentPendingIntentFlags))  // #2
+                    .AddAction(Resource.Drawable.ic_skip_next, "Next", PendingIntent.GetBroadcast(context, 3, nextIntent, cancelCurrentPendingIntentFlags))     // #3
+                    .AddAction(Resource.Drawable.ic_volume_up, "VolumeUp", PendingIntent.GetBroadcast(context, 4, volumeUpIntent, cancelCurrentPendingIntentFlags))     // #4
                     .SetStyle(new AndroidX.Media.App.NotificationCompat.MediaStyle().SetShowActionsInCompactView(2 /* #2: pause button */).SetMediaSession(mediaSessionCompat.SessionToken))
                     .SetOngoing(true)
                     .SetSilent(true)
