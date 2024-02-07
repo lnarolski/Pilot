@@ -6,7 +6,7 @@ using Android.OS;
 
 namespace Pilot.Droid
 {
-    [Activity(Label = "Pilot", Icon = "@mipmap/icon", Theme = "@style/Theme.MaterialComponents.Light.DarkActionBar", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Pilot", Icon = "@mipmap/icon", Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Microsoft.Maui.MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

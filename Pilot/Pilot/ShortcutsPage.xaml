@@ -55,7 +55,7 @@
                         <ColumnDefinition Width="8*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListView x:ItemsSource="" ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView" Grid.Column="1" Grid.Row="0">
+                    <ListView ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView" Grid.Column="1" Grid.Row="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>

@@ -129,18 +129,18 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.3" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.6" />
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.9.141-beta</Version>
     </PackageReference>
     <PackageReference Include="Zeroconf">
       <Version>3.6.11</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.3" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.3" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pilot\Pilot.csproj" />
