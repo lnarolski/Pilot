@@ -9,7 +9,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
-    <TargetFrameworks>net8.0-android</TargetFrameworks>
+    <TargetFrameworks>net8.0-android34.0</TargetFrameworks>
     <UseMaui>True</UseMaui>
     <AssemblyTitle>Pilot.Android</AssemblyTitle>
     <Product>Pilot.Android</Product>
@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.6" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.8" />
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.9.141-beta</Version>
     </PackageReference>

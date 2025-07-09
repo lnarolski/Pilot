@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.6" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.8" />
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.9.141-beta</Version>
     </PackageReference>
