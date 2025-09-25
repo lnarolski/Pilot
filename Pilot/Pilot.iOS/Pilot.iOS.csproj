@@ -4,7 +4,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <EnableSGenConc>true</EnableSGenConc>
     <ProvisioningType>automatic</ProvisioningType>
-    <TargetFrameworks>net8.0-ios</TargetFrameworks>
+    <TargetFrameworks>net9.0-ios</TargetFrameworks>
     <UseMaui>True</UseMaui>
     <AssemblyTitle>Pilot.iOS</AssemblyTitle>
     <Product>Pilot.iOS</Product>
@@ -42,10 +42,9 @@
     <Compile Remove="SceneDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.6" />
-    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.8" />
-    <PackageReference Include="sqlite-net-pcl" Version="1.9.141-beta" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.110" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.9" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
   </ItemGroup>
 </Project>

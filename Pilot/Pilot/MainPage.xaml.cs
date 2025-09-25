@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.PlatformConfiguration;
+using Microsoft.Maui.Layouts;
+using Pilot.Resx;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls.PlatformConfiguration;
-using Pilot.Resx;
-using System.Globalization;
-using Microsoft.Maui.Controls.Compatibility;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
 
 namespace Pilot
 {
@@ -32,25 +32,14 @@ namespace Pilot
                 return null;
 
             toBeRotated.Rotation = ContentRotation;
-            var result = new RelativeLayout();
 
-            result.Children.Add(toBeRotated,
-            xConstraint: Constraint.RelativeToParent((parent) =>
-            {
-                return parent.X - ((parent.Height - parent.Width) / 2);
-            }),
-            yConstraint: Constraint.RelativeToParent((parent) =>
-            {
-                return (parent.Height / 2) - (parent.Width / 2);
-            }),
-            widthConstraint: Constraint.RelativeToParent((parent) =>
-            {
-                return parent.Height;
-            }),
-            heightConstraint: Constraint.RelativeToParent((parent) =>
-            {
-                return parent.Width;
-            }));
+            var result = new AbsoluteLayout();
+
+            AbsoluteLayout.SetLayoutFlags(toBeRotated, AbsoluteLayoutFlags.All);
+            AbsoluteLayout.SetLayoutBounds(toBeRotated, new Rect(0.5, 0.5, 1, 1));
+            // center (0.5, 0.5), width=1, height=1 relative to parent
+
+            result.Children.Add(toBeRotated);
 
             return result;
         }

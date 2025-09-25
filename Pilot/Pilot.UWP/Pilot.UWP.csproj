@@ -23,7 +23,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
-    <TargetFrameworks>net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net9.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>True</UseMaui>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
@@ -129,19 +129,18 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.6" />
-    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.110" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.9" />
     <PackageReference Include="sqlite-net-pcl">
-      <Version>1.9.141-beta</Version>
+      <Version>1.9.172</Version>
     </PackageReference>
     <PackageReference Include="Zeroconf">
-      <Version>3.6.11</Version>
+      <Version>3.7.16</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pilot\Pilot.csproj" />
