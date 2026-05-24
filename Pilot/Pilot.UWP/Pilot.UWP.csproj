@@ -23,7 +23,7 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
-    <TargetFrameworks>net9.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks>net10.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>True</UseMaui>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
@@ -132,7 +132,7 @@
     <PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.110" />
     <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.9" />
     <PackageReference Include="sqlite-net-pcl">
-      <Version>1.9.172</Version>
+      <Version>1.11.272-beta</Version>
     </PackageReference>
     <PackageReference Include="Zeroconf">
       <Version>3.7.16</Version>

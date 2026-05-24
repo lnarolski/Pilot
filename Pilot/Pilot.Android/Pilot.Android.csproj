@@ -9,7 +9,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <!--<AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>-->
-    <TargetFrameworks>net9.0-android35.0</TargetFrameworks>
+    <TargetFrameworks>net10.0-android36.0</TargetFrameworks>
 	<UseMaui>True</UseMaui>
     <AssemblyTitle>Pilot.Android</AssemblyTitle>
     <Product>Pilot.Android</Product>
@@ -30,6 +30,16 @@
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <RuntimeIdentifiers>android-arm;android-x64;android-arm64</RuntimeIdentifiers>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android36.0|AnyCPU'">
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android36.0|AnyCPU'">
+    <AndroidUseAapt2>True</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\raw\silence.mp3" />
   </ItemGroup>
@@ -37,20 +47,20 @@
     <AndroidAsset Include="Resources\raw\silence.mp3" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.110" />
-    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.70" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="10.0.8" />
     <PackageReference Include="sqlite-net-pcl">
-      <Version>1.9.172</Version>
+      <Version>1.11.272-beta</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.5.0.3" />
-    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.3" />
-    <PackageReference Include="Xamarin.AndroidX.Media" Version="1.7.1" />
-    <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.10.3" />
-    <PackageReference Include="Xamarin.AndroidX.Work.Work.Runtime.Ktx" Version="2.10.3" />
+    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.6.0" />
+    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0" />
+    <PackageReference Include="Xamarin.AndroidX.Media" Version="1.8.0" />
+    <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.11.2" />
+    <PackageReference Include="Xamarin.AndroidX.Work.Work.Runtime.Ktx" Version="2.11.2" />
     <PackageReference Include="Zeroconf">
       <Version>3.7.16</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.70" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pilot\Pilot.csproj" />
