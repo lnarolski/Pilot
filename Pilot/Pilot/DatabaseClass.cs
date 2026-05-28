@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using Xamarin.Essentials;
+using Microsoft.Maui.Devices;
 
 namespace Pilot
 {
@@ -45,13 +45,13 @@ namespace Pilot
             {
                 string path;
 
-                if (DeviceInfo.Platform == DevicePlatform.UWP) //Wybór ścieżki dla pliku bazy danych zależnei od platformy
+                if (DeviceInfo.Platform == DevicePlatform.UWP) //Wybór ścieżki dla pliku bazy danych zależnie od platformy
                 {
                     path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }
                 else
                 {
-                    path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }
 
                 if (!File.Exists(Path.Combine(path, "db.db3"))) //Utworzenie lub otwarcie pliku bazy danych

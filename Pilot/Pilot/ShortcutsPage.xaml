@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:resources="clr-namespace:Pilot.Resx"
              x:Class="Pilot.ShortcutsPage">
@@ -55,7 +55,7 @@
                         <ColumnDefinition Width="8*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListView x:ItemsSource="" ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView" Grid.Column="1" Grid.Row="0">
+                    <ListView ItemTapped="ShortcutsListView_ItemTapped" IsVisible="True" x:Name="ShortcutsListView" Grid.Column="1" Grid.Row="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
